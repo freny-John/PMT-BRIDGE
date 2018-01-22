@@ -7,15 +7,19 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.bridge.pmt.MainActivity;
@@ -41,8 +45,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
-public class HoursCalendarFragment extends Fragment {
+
+public class HoursCalendarFragment extends Fragment  {
 
     private HorizontalCalendar horizontalCalendar;
     RecyclerView recyclerView;
@@ -50,15 +56,19 @@ public class HoursCalendarFragment extends Fragment {
     private List<WeekReport> weekReport;
     private List<HourDetail> currenthourDetails;
     LinearLayout empty;
-
+    View rootView;
+    FloatingActionButton btn;
+    PopupWindow popupWindow;
+    LayoutInflater inflater;
+    View popupView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_hours_calendar, container, false);
+        rootView = inflater.inflate(R.layout.fragment_hours_calendar, container, false);
         createUI(rootView);
         getActivity().setTitle("Hours");
 
-
+        btn = (FloatingActionButton) getActivity().findViewById(R.id.add_reg);
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         Calendar endDate = Calendar.getInstance();
@@ -93,6 +103,7 @@ public class HoursCalendarFragment extends Fragment {
                 if(position<=8 &&position>=2)
                 {currenthourDetails.addAll(weekReport.get(position-2).getHourDetails());}
                 adapter.notifyDataSetChanged();
+                Log.i("ADAPTERADD ", "1");
 
                 if(currenthourDetails.size()>0)
                 {
@@ -106,6 +117,12 @@ public class HoursCalendarFragment extends Fragment {
 
             }
         });
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              popIt();
+            }
+        });
 
         return rootView;
     }
@@ -117,7 +134,7 @@ public class HoursCalendarFragment extends Fragment {
         weekReport.clear();
         currenthourDetails = new ArrayList<>();
         currenthourDetails.clear();
-                adapter = new HoursAdapter(currenthourDetails,getContext());
+                adapter = new HoursAdapter(currenthourDetails,getContext(),HoursCalendarFragment.this);
 
         recyclerView.setAdapter(adapter);
 
@@ -184,8 +201,13 @@ public class HoursCalendarFragment extends Fragment {
                {
                   weekReport = response.body().getData().getWeekReport();
                    currenthourDetails.clear();
-                   currenthourDetails.addAll(weekReport.get(1).getHourDetails());
+                   int pos  = horizontalCalendar.getSelectedDatePosition();
+                   if(pos<=8 &&pos>=2)
+                   {currenthourDetails.addAll(weekReport.get(pos-2).getHourDetails());}
+
                    adapter.notifyDataSetChanged();
+                   Log.i("ADAPTERADD ", "1");
+
                    if(currenthourDetails.size()>0)
                {
                    empty.setVisibility(View.GONE);
@@ -224,5 +246,41 @@ public class HoursCalendarFragment extends Fragment {
 
 
 
+    }
+
+    public void onButtonShowPopupWindowClick() {
+
+        // get a reference to the already created main layout
+
+        // inflate the layout of the popup window
+         inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+         popupView = inflater.inflate(R.layout.popup_window, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = false; // lets taps outside the popup also dismiss it
+        popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        popupWindow.showAtLocation( rootView, Gravity.CENTER, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+    }
+
+
+    public void popIt() {
+        int pos  = horizontalCalendar.getSelectedDatePosition();
+        if(pos<=8 &&pos>=2) {
+            Toast.makeText(getActivity(), "Position : " + pos + " Date :" + weekReport.get(pos - 2).getDate(), Toast.LENGTH_LONG).show();
+            onButtonShowPopupWindowClick();
+        }
     }
 }

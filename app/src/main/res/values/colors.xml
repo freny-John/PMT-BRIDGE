@@ -9,5 +9,6 @@
     <color name="color_chat_item">#66639E</color>
     <color name="color_chat_user_name">#6BCEF7</color>
     <color name="color_small_text">#958CC8</color>
+    <color name="colorGreen">#4bd7bf</color>
 
 </resources>

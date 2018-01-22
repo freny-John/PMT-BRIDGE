@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextMessage;
     TextView title;
     ActionBar ab;
+    FloatingActionButton add_reg;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -77,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Folding Tab Bar
         FoldingTabBar tabBar = (FoldingTabBar) findViewById(R.id.folding_tab_bar);
+        add_reg = (FloatingActionButton) findViewById(R.id.add_reg);
+        add_reg.setVisibility(View.GONE);
         changeFragment(new NewsFragment());
 
         tabBar.setOnFoldingItemClickListener(new FoldingTabBar.OnFoldingItemSelectedListener() {
@@ -86,21 +90,29 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.ftb_menu_nearby:
                         changeFragment(new NewsFragment());
                         title.setText("NEWS");
+                        add_reg.setVisibility(View.GONE);
+
 
                         break;
                     case R.id.ftb_menu_new_chat:
                         changeFragment(new HoursCalendarFragment());
                         title.setText("HOURS");
+                        add_reg.setVisibility(View.VISIBLE);
+
 
                         break;
                     case R.id.ftb_menu_profile:
                         changeFragment(new LeaveFragment());
                         title.setText("LEAVE & HOLIDAYS");
+                        add_reg.setVisibility(View.GONE);
+
 
                         break;
                     case R.id.ftb_menu_settings:
                         changeFragment(new AccountFragment());
                         title.setText("ACCOUNT");
+                        add_reg.setVisibility(View.GONE);
+
 
                         break;
                 }
@@ -108,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
 
 
 
@@ -167,6 +180,12 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        add_reg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
     }
@@ -229,18 +248,22 @@ public class MainActivity extends AppCompatActivity {
         switch (itemId) {
             case R.id.nav_news:
                 fragment = new NewsFragment();
+
                 break;
             case R.id.nav_hours:
                 fragment = new HoursFragment();
+
+
                 break;
 
             case R.id.nav_leave:
                 fragment = new LeaveFragment();
-                break;
+                           break;
 
             case R.id.nav_account:
 
                 fragment = new AccountFragment();
+
                 break;
 
                // logout();

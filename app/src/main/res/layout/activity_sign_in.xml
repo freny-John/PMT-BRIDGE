@@ -21,21 +21,38 @@
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter email "
+            android:padding="16dp"
+            android:textSize="12sp"
+            android:layout_margin="8dp"
+            android:background="@drawable/edit_bg"
+            android:textColorHint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:hint="Enter email"
             android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:textSize="12sp"
             android:layout_height="wrap_content"
-            android:hint="Enter password "
+            android:background="@drawable/edit_bg"
+            android:textColorHint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:hint="Enter password"
             android:inputType="textPassword" />
 
         <Button
             android:id="@+id/buttonSignIn"
             android:layout_width="match_parent"
+            android:textAllCaps="false"
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_bg"
             android:layout_height="wrap_content"
-            android:text="Sign In" />
+            android:text="Sign In"
+            tools:ignore="UnusedAttribute" />
 
     </LinearLayout>
 </RelativeLayout>

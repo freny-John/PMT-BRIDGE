@@ -10,8 +10,8 @@
     android:background="@color/colorPrimary">
 
     <ImageView
-        android:background="@color/colorAccent"
-        android:padding="8dp"
+        android:background="@drawable/bg_circle"
+        android:padding="42dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:foregroundGravity="center"

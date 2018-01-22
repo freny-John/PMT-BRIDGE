@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bridge.pmt.R;
+import com.bridge.pmt.fragments.HoursCalendarFragment;
 import com.bridge.pmt.helpers.DataManager;
 import com.bridge.pmt.models.HourDetail;
 import com.bridge.pmt.models.HoursModel;
@@ -23,10 +24,14 @@ public class HoursAdapter extends RecyclerView.Adapter<HoursAdapter.ViewHolder> 
 
     private List<HourDetail> mHourmodels;
     private Context context;
+    private HoursCalendarFragment hoursCalendarFragment;
 
-    public HoursAdapter(List<HourDetail> mHourmodels,Context context) {
+    public HoursAdapter(List<HourDetail> mHourmodels, Context context, HoursCalendarFragment hoursCalendarFragment) {
         this.mHourmodels = mHourmodels;
         this.context = context;
+        this.hoursCalendarFragment = hoursCalendarFragment;
+
+
     }
 
     @Override
@@ -37,16 +42,27 @@ public class HoursAdapter extends RecyclerView.Adapter<HoursAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.time.setText(mHourmodels.get(position).getHours().toString());
-        holder.descrp.setText(mHourmodels.get(position).getDescription());
-        holder.activty.setText(mHourmodels.get(position).getActivity().toString());
+        holder.hourDetail =mHourmodels.get(position);
+        holder.time.setText(holder.hourDetail.getHours().toString());
+        holder.descrp.setText(holder.hourDetail.getDescription());
+        holder.activty.setText(holder.hourDetail.getActivity().toString());
         holder.relloy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
          Toast.makeText(context,"Work in progress" , Toast.LENGTH_LONG).show();
+                hoursCalendarFragment.popIt();
 
             }
         });
+        if(holder.hourDetail.getExtraWork()==0)
+        {
+            holder.extra.setVisibility(View.GONE);
+        }
+        else {
+            holder.extra.setVisibility(View.VISIBLE);
+
+        }
+
     }
 
     @Override
@@ -58,7 +74,9 @@ public class HoursAdapter extends RecyclerView.Adapter<HoursAdapter.ViewHolder> 
         private TextView time;
         private TextView activty;
         private TextView descrp;
+        private ImageView extra;
         private RelativeLayout relloy;
+        private HourDetail hourDetail;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -66,9 +84,11 @@ public class HoursAdapter extends RecyclerView.Adapter<HoursAdapter.ViewHolder> 
             time = (TextView) itemView.findViewById(R.id.time);
             activty = (TextView) itemView.findViewById(R.id.activty);
             descrp = (TextView) itemView.findViewById(R.id.descrp);
+            extra = (ImageView) itemView.findViewById(R.id.extra);
             relloy = (RelativeLayout) itemView.findViewById(R.id.relloy);
         }
 
 
     }
+
 }
