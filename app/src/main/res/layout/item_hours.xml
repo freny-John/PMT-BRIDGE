@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/relloy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryLite">
+
+    <TextView
+        android:id="@+id/time"
+        android:text="8"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="36sp"
+        android:textColor="@android:color/white"
+/>
+    <TextView
+        android:id="@+id/hrs"
+        android:text="Hrs"
+        android:layout_marginBottom="8dp"
+        android:layout_alignBottom="@+id/time"
+        android:layout_toEndOf="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_toStartOf="@+id/activty"
+        android:textColor="@color/color_chat_user_name"
+        />
+
+    <TextView
+        android:id="@+id/activty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/time"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/white"
+/>
+
+    <TextView
+        android:id="@+id/descrp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:maxLength="150"
+        android:layout_below="@+id/activty"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/color_small_text"
+        />
+
+        <ImageView
+            android:id="@+id/extra"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/extratime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    <View
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="1dp"/>
+
+</RelativeLayout>
