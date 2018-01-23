@@ -7,7 +7,7 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_margin="48dp"
+        android:layout_margin="50dp"
         android:layout_centerInParent="true"
         android:src="@drawable/emptynews"
         android:layout_height="wrap_content" />
@@ -21,5 +21,16 @@
         android:textColor="@android:color/white"
         android:text="Our service monkeys are on the way!"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
+
+    <Button
+        android:id="@+id/btnLogOutId"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:background="@color/colorPrimaryLite"
+        android:text="LOG OUT" />
 </RelativeLayout>

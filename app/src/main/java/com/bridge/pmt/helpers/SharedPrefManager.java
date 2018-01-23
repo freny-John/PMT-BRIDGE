@@ -1,6 +1,7 @@
 package com.bridge.pmt.helpers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
@@ -117,7 +118,7 @@ public class SharedPrefManager {
 //        );
 //    }
 
-    public boolean logout() {
+    public static boolean logout() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();

@@ -150,22 +150,6 @@ public class HoursCalendarFragment extends Fragment  {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-//        Call<BaseResponse> call = service.getUsers();
-//
-//        call.enqueue(new Callback<BaseResponse>() {
-//            @Override
-//            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-//                adapter = new HoursAdapter(response.body().getUsers(), getActivity());
-//                recyclerView.setAdapter(adapter);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<BaseResponse> call, Throwable t) {
-//
-//            }
-//        });
-
-
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Signing Up...");
         progressDialog.show();
@@ -291,4 +275,57 @@ public class HoursCalendarFragment extends Fragment  {
             onButtonShowPopupWindowClick(hourDetail);
         }
     }
+
+
+    private void addHourReport() {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Adding ...");
+        progressDialog.show();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        APIService service = retrofit.create(APIService.class);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
+        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID, 0);
+
+        // Toast.makeText(getActivity(),""+ userId, Toast.LENGTH_LONG).show();
+
+        Call<BaseResponse> call = service.getWeekReport(token, userId);
+
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                progressDialog.dismiss();
+
+
+                Log.e("SERVER-RESPONSE-data", String.valueOf((response.body())));
+                Log.e("SERVER-RESPONSE-data", String.valueOf((response.body().getData().getWeekReport())));
+
+//                Toast.makeText(getApplicationContext(),response.body().getToken()  , Toast.LENGTH_LONG).show();
+
+                if (response.body().getStatus().equals(1)) {
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                progressDialog.dismiss();
+             Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
+    }
+
+
 }

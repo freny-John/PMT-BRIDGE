@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.bridge.pmt.R;
 import com.bridge.pmt.fragments.HoursCalendarFragment;
-import com.bridge.pmt.helpers.DataManager;
 import com.bridge.pmt.models.HourDetail;
 import com.bridge.pmt.models.HoursModel;
 import com.bridge.pmt.models.WeekReport;
