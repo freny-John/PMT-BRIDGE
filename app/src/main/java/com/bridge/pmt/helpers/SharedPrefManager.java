@@ -6,6 +6,9 @@ import android.widget.Toast;
 
 import com.bridge.pmt.models.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class SharedPrefManager {
 
@@ -120,5 +123,29 @@ public class SharedPrefManager {
         editor.clear();
         editor.apply();
         return true;
+    }
+
+
+    public static void pushStringList( List list, String uniqueListName) {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(uniqueListName + "_size", list.size());
+
+        for (int i = 0; i < list.size(); i++) {
+            editor.remove(uniqueListName + i);
+            editor.putString(uniqueListName + i, list.get(i).toString());
+        }
+        editor.apply();
+    }
+
+    public static List<String> pullStringList(String uniqueListName) {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        List<String> result = new ArrayList<>();
+        int size = sharedPreferences.getInt(uniqueListName + "_size", 0);
+
+        for (int i = 0; i < size; i++) {
+            result.add(sharedPreferences.getString(uniqueListName + i, null));
+        }
+        return result;
     }
 }

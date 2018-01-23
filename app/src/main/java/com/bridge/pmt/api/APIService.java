@@ -29,4 +29,21 @@ public interface APIService {
     );
 
 
+
+    @POST("api/v5/activity")
+    Call<BaseResponse> getUserActivity(
+            @Query("token") String token
+
+    );
+
+    @FormUrlEncoded
+    @POST("api/v5/list_user_project_name")
+    Call<BaseResponse> getUserProjects(
+            @Query("token") String token,
+            @Field("id") int id
+    );
+
+
+
+
 }

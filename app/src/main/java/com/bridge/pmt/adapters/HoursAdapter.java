@@ -41,7 +41,7 @@ public class HoursAdapter extends RecyclerView.Adapter<HoursAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.hourDetail =mHourmodels.get(position);
         holder.time.setText(holder.hourDetail.getHours().toString());
         holder.descrp.setText(holder.hourDetail.getDescription());
@@ -50,7 +50,8 @@ public class HoursAdapter extends RecyclerView.Adapter<HoursAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
          Toast.makeText(context,"Work in progress" , Toast.LENGTH_LONG).show();
-                hoursCalendarFragment.popIt();
+
+                hoursCalendarFragment.popIt(holder.hourDetail);
 
             }
         });

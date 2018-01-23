@@ -38,6 +38,14 @@ public class HourDetail {
      * 
      */
     public HourDetail() {
+        this.id = 0;
+        this.userId = 0;
+        this.pdate = "";
+        this.hours = 0;
+        this.projId = 0;
+        this.activity = "";
+        this.description = "";
+        this.extraWork = 0;
     }
 
     /**

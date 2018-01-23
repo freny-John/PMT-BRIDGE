@@ -20,8 +20,7 @@ public class SplashActivity extends AppCompatActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
-        getSupportActionBar().setElevation(0);
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().hide();
 
         new Handler().postDelayed(new Runnable() {
 

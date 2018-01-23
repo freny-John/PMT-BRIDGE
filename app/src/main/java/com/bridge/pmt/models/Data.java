@@ -20,6 +20,19 @@ public class Data {
     @Expose
     private List<WeekReport> weekReport = null;
 
+
+    @SerializedName("activity")
+    @Expose
+    private List<Activity> activity = null;
+
+
+    @SerializedName("project_list")
+    @Expose
+    private List<ProjectList> projectList = null;
+
+
+
+
     /**
      * No args constructor for use in serialization
      * 
@@ -28,7 +41,7 @@ public class Data {
     }
 
     /**
-     * 
+     *
      * @param user
      */
     public Data(User user) {
@@ -50,9 +63,15 @@ public class Data {
      * @param weekReport
      */
 
-    public Data(List<WeekReport> weekReport) {
+    /**
+     *
+     * @param activity
+     */
+
+    public Data(List<WeekReport> weekReport,List<Activity> activity) {
         super();
         this.weekReport = weekReport;
+        this.activity = activity;
     }
 
     public List<WeekReport> getWeekReport() {
@@ -63,6 +82,45 @@ public class Data {
         this.weekReport = weekReport;
     }
 
+
+
+
+
+//    /**
+//     *
+//     * @param activity
+//     */
+//    public Data(List<Activity> activity) {
+//        super();
+//        this.activity = activity;
+//    }
+
+    public List<Activity> getActivity() {
+        return activity;
+    }
+
+    public void setActivity(List<Activity> activity) {
+        this.activity = activity;
+    }
+
+
+
+    /**
+     *
+     * @param projectList
+     */
+    public Data(List<ProjectList> projectList) {
+        super();
+        this.projectList = projectList;
+    }
+
+    public List<ProjectList> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<ProjectList> projectList) {
+        this.projectList = projectList;
+    }
 
 
 

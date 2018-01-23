@@ -2,7 +2,6 @@ package com.bridge.pmt.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,24 +10,22 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import com.bridge.pmt.MainActivity;
 import com.bridge.pmt.R;
 import com.bridge.pmt.api.APIService;
 import com.bridge.pmt.api.APIUrl;
 import com.bridge.pmt.adapters.HoursAdapter;
 import com.bridge.pmt.helpers.SharedPrefManager;
-import com.bridge.pmt.helpers.ValidationManager;
 import com.bridge.pmt.models.BaseResponse;
 import com.bridge.pmt.models.HourDetail;
 import com.bridge.pmt.models.WeekReport;
@@ -120,7 +117,9 @@ public class HoursCalendarFragment extends Fragment  {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              popIt();
+
+
+              popIt(new HourDetail());
             }
         });
 
@@ -248,7 +247,7 @@ public class HoursCalendarFragment extends Fragment  {
 
     }
 
-    public void onButtonShowPopupWindowClick() {
+    public void onButtonShowPopupWindowClick(HourDetail hourDetail) {
 
         // get a reference to the already created main layout
 
@@ -259,9 +258,18 @@ public class HoursCalendarFragment extends Fragment  {
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = false; // lets taps outside the popup also dismiss it
+        boolean focusable = true; // lets taps outside the popup also dismiss it
         popupWindow = new PopupWindow(popupView, width, height, focusable);
+        Button cancel = (Button) popupView.findViewById(R.id.cancel);
+        Button submit = (Button) popupView.findViewById(R.id.submit);
 
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+
+            }
+        });
         // show the popup window
         popupWindow.showAtLocation( rootView, Gravity.CENTER, 0, 0);
 
@@ -276,11 +284,11 @@ public class HoursCalendarFragment extends Fragment  {
     }
 
 
-    public void popIt() {
+    public void popIt(HourDetail hourDetail) {
         int pos  = horizontalCalendar.getSelectedDatePosition();
         if(pos<=8 &&pos>=2) {
             Toast.makeText(getActivity(), "Position : " + pos + " Date :" + weekReport.get(pos - 2).getDate(), Toast.LENGTH_LONG).show();
-            onButtonShowPopupWindowClick();
+            onButtonShowPopupWindowClick(hourDetail);
         }
     }
 }

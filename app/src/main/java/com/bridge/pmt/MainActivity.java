@@ -1,6 +1,7 @@
 package com.bridge.pmt;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -29,16 +31,30 @@ import android.widget.Toast;
 
 import com.bridge.pmt.activities.SettingsActivity;
 import com.bridge.pmt.activities.SignInActivity;
+import com.bridge.pmt.api.APIService;
+import com.bridge.pmt.api.APIUrl;
 import com.bridge.pmt.fragments.HoursCalendarFragment;
 import com.bridge.pmt.fragments.LeaveFragment;
 import com.bridge.pmt.fragments.NewsFragment;
 import com.bridge.pmt.fragments.AccountFragment;
 import com.bridge.pmt.fragments.HoursFragment;
 import com.bridge.pmt.helpers.SharedPrefManager;
+import com.bridge.pmt.models.BaseResponse;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import client.yalantis.com.foldingtabbar.FoldingTabBar;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.bridge.pmt.helpers.SharedPrefManager.pullStringList;
+import static com.bridge.pmt.helpers.SharedPrefManager.pushStringList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -287,5 +303,125 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+
+
+
+        //Geting the user token from sharedpreference
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
+        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID,0);
+
+        if (token != null) {
+
+
+            //Web service to get the activity list
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Geting Activities...");
+            progressDialog.show();
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(APIUrl.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            APIService service = retrofit.create(APIService.class);
+            Call<BaseResponse> call = service.getUserActivity(token);
+            call.enqueue(new Callback<BaseResponse>() {
+                @Override
+                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                    progressDialog.dismiss();
+
+                    Log.e("SERVER-RESPONSE-data", String.valueOf((response.body().getData().getActivity() )));
+
+                   List  activityList=response.body().getData().getActivity();
+
+                   // activity list to sharedpreferences
+                    pushStringList(activityList,"activityList");
+
+                    Log.e("ACTIVITY LIST ", String.valueOf(activityList ));
+
+                    // get activitylist from sharedpreferences
+                    Log.e("SP LIST ", String.valueOf(         pullStringList("activityList") ));
+                    Toast.makeText(getApplicationContext(), ""+ response.body().getData().getActivity(), Toast.LENGTH_LONG).show();
+
+                    if ( String.valueOf(response.body().getStatus() ).equals("1")) {
+
+
+//                        SharedPrefManager.getInstance(getApplicationContext()).userActivity(response.body().getData().getUser());
+//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//
+//                        finish();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+
+
+                @Override
+                public void onFailure(Call<BaseResponse> call, Throwable t) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
+
+            call = service.getUserProjects(token,userId);
+            call.enqueue(new Callback<BaseResponse>() {
+                @Override
+                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                    progressDialog.dismiss();
+
+                    Log.e("SERVER-RESPONSE-data", String.valueOf((response.body().getData().getProjectList() )));
+
+                   List projectList=response.body().getData().getProjectList();
+
+                   // activity list to sharedpreferences
+                    pushStringList(projectList,"projectList");
+
+                    Log.e("PROJECT LIST ", String.valueOf(projectList ));
+
+                    // get activitylist from sharedpreferences
+                    Log.e("SP LIST ", String.valueOf(         pullStringList("activityList") ));
+                    Toast.makeText(getApplicationContext(), ""+ response.body().getData().getProjectList(), Toast.LENGTH_LONG).show();
+
+                    if ( String.valueOf(response.body().getStatus() ).equals("1")) {
+
+
+//                        SharedPrefManager.getInstance(getApplicationContext()).userActivity(response.body().getData().getUser());
+//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//
+//                        finish();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+
+
+                @Override
+                public void onFailure(Call<BaseResponse> call, Throwable t) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+
+
+
+
+
+
+
+
+
+    }
 }
