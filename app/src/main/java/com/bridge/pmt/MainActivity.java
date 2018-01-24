@@ -9,41 +9,32 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bridge.pmt.activities.SettingsActivity;
 import com.bridge.pmt.activities.SignInActivity;
 import com.bridge.pmt.api.APIService;
 import com.bridge.pmt.api.APIUrl;
-import com.bridge.pmt.fragments.HoursCalendarFragment;
+import com.bridge.pmt.fragments.HoursFragment;
 import com.bridge.pmt.fragments.LeaveFragment;
 import com.bridge.pmt.fragments.NewsFragment;
 import com.bridge.pmt.fragments.AccountFragment;
-import com.bridge.pmt.fragments.HoursFragment;
 import com.bridge.pmt.helpers.SharedPrefManager;
 import com.bridge.pmt.models.BaseResponse;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import client.yalantis.com.foldingtabbar.FoldingTabBar;
@@ -111,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     case R.id.ftb_menu_new_chat:
-                        changeFragment(new HoursCalendarFragment());
+                        changeFragment(new HoursFragment());
                         title.setText("HOURS");
                         add_reg.setVisibility(View.VISIBLE);
 

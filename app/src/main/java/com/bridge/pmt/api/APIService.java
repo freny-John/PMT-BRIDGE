@@ -44,6 +44,35 @@ public interface APIService {
     );
 
 
+    @FormUrlEncoded
+    @POST("api/v5/addReport")
+    Call<BaseResponse> addHourReport(
+            @Query("token") String token,
+
+            @Field("user_id") int user_id,
+            @Field("pdate") String pdate,
+            @Field("hours") int hours,
+            @Field("proj_id") int proj_id,
+            @Field("activity") String activity,
+            @Field("description") String description,
+            @Field("extra_work") int extra_work
+    );
+
+
+    @FormUrlEncoded
+    @POST("api/v5/updateReport")
+    Call<BaseResponse> updateHourReport(
+            @Query("token") String token,
+
+            @Field("user_id") int user_id,
+            @Field("pdate") String pdate,
+            @Field("hours") int hours,
+            @Field("proj_id") int proj_id,
+            @Field("activity") String activity,
+            @Field("description") String description,
+            @Field("extra_work") int extra_work
+    );
+
 
 
 }

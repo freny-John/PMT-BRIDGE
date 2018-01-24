@@ -11,10 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bridge.pmt.R;
-import com.bridge.pmt.fragments.HoursCalendarFragment;
+import com.bridge.pmt.fragments.HoursFragment;
 import com.bridge.pmt.models.HourDetail;
-import com.bridge.pmt.models.HoursModel;
-import com.bridge.pmt.models.WeekReport;
 
 import java.util.List;
 
@@ -23,9 +21,9 @@ public class HoursAdapter extends RecyclerView.Adapter<HoursAdapter.ViewHolder> 
 
     private List<HourDetail> mHourmodels;
     private Context context;
-    private HoursCalendarFragment hoursCalendarFragment;
+    private HoursFragment hoursCalendarFragment;
 
-    public HoursAdapter(List<HourDetail> mHourmodels, Context context, HoursCalendarFragment hoursCalendarFragment) {
+    public HoursAdapter(List<HourDetail> mHourmodels, Context context, HoursFragment hoursCalendarFragment) {
         this.mHourmodels = mHourmodels;
         this.context = context;
         this.hoursCalendarFragment = hoursCalendarFragment;
