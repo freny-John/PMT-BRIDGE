@@ -303,31 +303,31 @@ public class HoursFragment extends Fragment  {
 
 
 
-        Call<BaseResponse> call = service.addHourReport(token, userId,pdate,hours,proj_id,activity,description,extra_work);
-
-        call.enqueue(new Callback<BaseResponse>() {
-            @Override
-            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                progressDialog.dismiss();
-
-
-                Log.e("RESPONSE-data", String.valueOf((response.body())));
-
-               Toast.makeText(getActivity(),response.body().getMessage()  , Toast.LENGTH_LONG).show();
-
-                if (response.body().getStatus().equals(1)) {
-
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BaseResponse> call, Throwable t) {
-                progressDialog.dismiss();
-             Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-
-            }
-        });
+//        Call<BaseResponse> call = service.addHourReport(token, userId,pdate,hours,proj_id,activity,description,extra_work);
+//
+//        call.enqueue(new Callback<BaseResponse>() {
+//            @Override
+//            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+//                progressDialog.dismiss();
+//
+//
+//                Log.e("RESPONSE-data", String.valueOf((response.body())));
+//
+//               Toast.makeText(getActivity(),response.body().getMessage()  , Toast.LENGTH_LONG).show();
+//
+//                if (response.body().getStatus().equals(1)) {
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<BaseResponse> call, Throwable t) {
+//                progressDialog.dismiss();
+//             Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+//
+//            }
+//        });
 
 
     }
@@ -357,35 +357,97 @@ public class HoursFragment extends Fragment  {
 
 
 
-
-        Call<BaseResponse> call = service.updateHourReport(token, userId,pdate,hours,proj_id,activity,description,extra_work);
-
-        call.enqueue(new Callback<BaseResponse>() {
-            @Override
-            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                progressDialog.dismiss();
-
-
-                Log.e("RESPONSE-data", String.valueOf((response.body())));
-
-                Toast.makeText(getActivity(),response.body().getMessage()  , Toast.LENGTH_LONG).show();
-
-                if (response.body().getStatus().equals(1)) {
-
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BaseResponse> call, Throwable t) {
-                progressDialog.dismiss();
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-
-            }
-        });
+//
+//        Call<BaseResponse> call = service.updateHourReport(token, userId,pdate,hours,proj_id,activity,description,extra_work);
+//
+//        call.enqueue(new Callback<BaseResponse>() {
+//            @Override
+//            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+//                progressDialog.dismiss();
+//
+//
+//                Log.e("RESPONSE-data", String.valueOf((response.body())));
+//
+//                Toast.makeText(getActivity(),response.body().getMessage()  , Toast.LENGTH_LONG).show();
+//
+//                if (response.body().getStatus().equals(1)) {
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<BaseResponse> call, Throwable t) {
+//                progressDialog.dismiss();
+//                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+//
+//            }
+//        });
 
 
     }
+
+
+
+
+
+
+
+    //Web service to Delete the hour report
+
+    private void deleteHourReport() {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Deleting ...");
+        progressDialog.show();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        APIService service = retrofit.create(APIService.class);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
+        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID, 0);
+
+
+
+//
+//        Call<BaseResponse> call = service.deleteHourReport(token, report_id);
+//
+//        call.enqueue(new Callback<BaseResponse>() {
+//            @Override
+//            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+//                progressDialog.dismiss();
+//
+//
+//                Log.e("RESPONSE-data", String.valueOf((response.body())));
+//
+//                Toast.makeText(getActivity(),response.body().getMessage()  , Toast.LENGTH_LONG).show();
+//
+//                if (response.body().getStatus().equals(1)) {
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<BaseResponse> call, Throwable t) {
+//                progressDialog.dismiss();
+//                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+//
+//            }
+ //   });
+
+
+    }
+
+
+
 
 
 }
