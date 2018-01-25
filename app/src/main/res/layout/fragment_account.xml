@@ -26,11 +26,10 @@
 
     <Button
         android:id="@+id/btnLogOutId"
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
-        android:background="@color/colorPrimaryLite"
-        android:text="LOG OUT" />
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:background="@color/colorGreen"
+        android:text="Log Out" />
 </RelativeLayout>

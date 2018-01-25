@@ -31,6 +31,7 @@ import com.bridge.pmt.fragments.LeaveFragment;
 import com.bridge.pmt.fragments.NewsFragment;
 import com.bridge.pmt.fragments.AccountFragment;
 import com.bridge.pmt.helpers.SharedPrefManager;
+import com.bridge.pmt.models.Activity;
 import com.bridge.pmt.models.BaseResponse;
 
 import org.jetbrains.annotations.NotNull;
@@ -44,8 +45,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.bridge.pmt.helpers.SharedPrefManager.pullStringList;
-import static com.bridge.pmt.helpers.SharedPrefManager.pushStringList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -327,17 +327,17 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     progressDialog.dismiss();
 
-                    Log.e("SERVER-RESPONSE-data", String.valueOf((response.body().getData().getActivity() )));
+                    Log.e("SERVER_RESPONSE_data","ACTIVTY :"+ String.valueOf((response.body().getData().getActivity() )));
 
-                   List  activityList=response.body().getData().getActivity();
+                   List <Activity> activityList=response.body().getData().getActivity();
 
                    // activity list to sharedpreferences
-                    pushStringList(activityList,"activityList");
+                    SharedPrefManager.getInstance(getApplicationContext()).pushactivityList(activityList);
 
-                    Log.e("ACTIVITY LIST ", String.valueOf(activityList ));
+                    Log.e("ACTIVITY_LIST ", String.valueOf(activityList ));
 
                     // get activitylist from sharedpreferences
-                    Log.e("SP LIST ", String.valueOf(         pullStringList("activityList") ));
+                    Log.e("SP_LIST ", String.valueOf(         SharedPrefManager.getInstance(getApplicationContext()).pullactivityList() ));
                     Toast.makeText(getApplicationContext(), ""+ response.body().getData().getActivity(), Toast.LENGTH_LONG).show();
 
                     if ( String.valueOf(response.body().getStatus() ).equals("1")) {
@@ -361,25 +361,23 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
-
-
             call = service.getUserProjects(token,userId);
             call.enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     progressDialog.dismiss();
 
-                    Log.e("SERVER-RESPONSE-data", String.valueOf((response.body().getData().getProjectList() )));
+                    Log.e("SERVER_RESPONSE_data", "pROJECT LIST "+String.valueOf((response.body().getData().getProjectList() )));
 
                    List projectList=response.body().getData().getProjectList();
 
                    // activity list to sharedpreferences
-                    pushStringList(projectList,"projectList");
+                    SharedPrefManager.getInstance(getApplicationContext()).pushprojectList(projectList);
 
-                    Log.e("PROJECT LIST ", String.valueOf(projectList ));
+                    Log.e("PROJECT_LIST ", String.valueOf(projectList ));
 
                     // get activitylist from sharedpreferences
-                    Log.e("SP LIST ", String.valueOf(         pullStringList("activityList") ));
+                    Log.e("SP_LIST ", String.valueOf(         SharedPrefManager.getInstance(getApplicationContext()).pullactivityList() ));
                     Toast.makeText(getApplicationContext(), ""+ response.body().getData().getProjectList(), Toast.LENGTH_LONG).show();
 
                     if ( String.valueOf(response.body().getStatus() ).equals("1")) {

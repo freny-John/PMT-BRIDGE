@@ -4,7 +4,7 @@
     <!-- other shapes are oval, line ,ring -->
 
     <corners
-        android:radius="10dp"
+        android:radius="0dp"
         android:topLeftRadius="0dp"
         android:bottomRightRadius="0dp"
         android:topRightRadius="0dp"/>

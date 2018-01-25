@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import com.bridge.pmt.models.Activity;
+import com.bridge.pmt.models.ProjectList;
 import com.bridge.pmt.models.User;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +123,7 @@ public class SharedPrefManager {
 //        );
 //    }
 
-    public static boolean logout() {
+    public  boolean logout() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
@@ -127,26 +132,75 @@ public class SharedPrefManager {
     }
 
 
-    public static void pushStringList( List list, String uniqueListName) {
+//    public  void pushStringList( List list, String uniqueListName) {
+//        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//        for (int i = 0; i < list.size(); i++) {
+//            editor.remove(uniqueListName + i);
+//            editor.putString(uniqueListName + i, list.get(i).toString());
+//        }
+//        editor.apply();
+//    }
+
+    public  void pushactivityList( List<Activity> list) {
+        String key = "activityList";
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(uniqueListName + "_size", list.size());
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
 
-        for (int i = 0; i < list.size(); i++) {
-            editor.remove(uniqueListName + i);
-            editor.putString(uniqueListName + i, list.get(i).toString());
-        }
+        editor.putString(key, json);
         editor.apply();
     }
 
-    public static List<String> pullStringList(String uniqueListName) {
+    public  void pushprojectList( List<ProjectList> list) {
+        String key = "projectList";
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        List<String> result = new ArrayList<>();
-        int size = sharedPreferences.getInt(uniqueListName + "_size", 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(key, json);
+        editor.apply();
+    }
 
-        for (int i = 0; i < size; i++) {
-            result.add(sharedPreferences.getString(uniqueListName + i, null));
-        }
+        public  List<Activity> pullactivityList() {
+            String key = "activityList";
+            SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+            List<Activity> result ;
+            Gson gson = new Gson();
+            String json = sharedPreferences.getString(key, "");
+            Type type = new TypeToken<List<Activity>>(){}.getType();
+            result = gson.fromJson(json,type);
+            if(result==null)
+            {
+                result = new ArrayList<>();
+            }
         return result;
     }
+    public  List<ProjectList> pullprojectList() {
+            String key = "projectList";
+            SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+            List<ProjectList> result ;
+            Gson gson = new Gson();
+            String json = sharedPreferences.getString(key, "");
+            Type type = new TypeToken<List<ProjectList>>(){}.getType();
+            result = gson.fromJson(json,type);
+            if(result==null)
+            {
+                result = new ArrayList<>();
+            }
+        return result;
+    }
+
+//    public  List<String> pullStringList(String uniqueListName) {
+//        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+//        List<String> result = new ArrayList<>();
+//        int size = sharedPreferences.getInt(uniqueListName + "_size", 0);
+//
+//        for (int i = 0; i < size; i++) {
+//            result.add(sharedPreferences.getString(uniqueListName + i, null));
+//        }
+//        return result;
+//    }
 }

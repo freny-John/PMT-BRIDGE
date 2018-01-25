@@ -1,44 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_gravity="center"
+    android:layout_margin="16dp"
     android:gravity="center"
+    android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark">
-
-    <LinearLayout
+    android:background="@android:color/transparent">
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/date"
+        android:gravity="center"
+        android:padding="16dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/date_bg"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="@color/colorPrimaryDark"
         android:orientation="vertical">
 
-        <org.angmarch.views.NiceSpinner
-            android:id="@+id/nice_spinner_projects_list_id"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
-
-        <org.angmarch.views.NiceSpinner
-            android:id="@+id/nice_spinner_activity_list_id"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
-
-        <EditText
+        <TextView
+            android:id="@+id/projectstv"
+            android:layout_width="wrap_content"
+            android:text="Project"
+            android:textColor="@android:color/white"
+            android:layout_height="wrap_content" />
+       <Spinner
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:id="@+id/projects_list"
+           android:layout_below="@+id/projectstv"
+           android:background="@drawable/bg_spinner"
+            android:spinnerMode="dialog"
+           android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/activitytv"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/projects_list"
+            android:text="Activity"
+            android:textColor="@android:color/white"
+            android:layout_height="wrap_content" />
+        <Spinner
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:id="@+id/activity_list"
+            android:layout_below="@+id/activitytv"
+            android:background="@drawable/bg_spinner"
+            android:spinnerMode="dialog"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!--<NumberPicker-->
+            <!--android:layout_below="@+id/activity_list"-->
+            <!--android:id="@+id/numberPicker"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--/>-->
+
+
+        <com.hrules.horizontalnumberpicker.HorizontalNumberPicker
+            android:layout_below="@+id/activity_list"
+            android:id="@+id/horizontalNumberPicker"
+            android:layout_margin="8dp"
+            android:background="@drawable/edit_bg"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
+            />
+        <EditText
+            android:id="@+id/descp"
+            android:maxLength="100"
+            android:maxLines="5"
+            android:gravity="start|top"
+            android:minLines="5"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/horizontalNumberPicker"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_bg"
+            android:padding="8dp"
+            android:textSize="12sp"
+            android:hint="Description"
+            android:textColorHint="#88ffffff"
+            android:textColor="@android:color/white"
             android:ems="10"
-            android:layout_margin="16dp"
             android:inputType="textMultiLine" />
 
         <CheckBox
             android:id="@+id/checkBox"
+            android:layout_below="@+id/descp"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="CheckBox" />
+            android:text="Extra Hours" />
 
 
+
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -46,9 +108,8 @@
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/cancel"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:text="Cancel"
-            android:layout_margin="16dp"
             android:textColor="@android:color/white"
             android:background="@drawable/button2_bg"
             android:textAllCaps="false"
@@ -56,10 +117,8 @@
             android:layout_height="wrap_content" />
         <Button
             android:id="@+id/submit"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:text="Add"
-            android:layout_margin="16dp"
-
             android:textColor="@android:color/white"
             android:background="@drawable/button3_bg"
             android:textAllCaps="false"
@@ -68,6 +127,4 @@
 
     </LinearLayout>
 
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

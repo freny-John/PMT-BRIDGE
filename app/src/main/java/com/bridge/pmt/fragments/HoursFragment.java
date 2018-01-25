@@ -16,9 +16,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bridge.pmt.R;
@@ -26,9 +30,14 @@ import com.bridge.pmt.api.APIService;
 import com.bridge.pmt.api.APIUrl;
 import com.bridge.pmt.adapters.HoursAdapter;
 import com.bridge.pmt.helpers.SharedPrefManager;
+import com.bridge.pmt.models.Activity;
 import com.bridge.pmt.models.BaseResponse;
 import com.bridge.pmt.models.HourDetail;
+import com.bridge.pmt.models.ProjectList;
 import com.bridge.pmt.models.WeekReport;
+import com.hrules.horizontalnumberpicker.HorizontalNumberPicker;
+import com.jaredrummler.materialspinner.MaterialSpinner;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,13 +67,34 @@ public class HoursFragment extends Fragment  {
     PopupWindow popupWindow;
     LayoutInflater inflater;
     View popupView;
+    List<Activity> activityList =  new ArrayList<>();
+    List<ProjectList> projectList =  new ArrayList<>();
+    String token;
+    int userId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_hours, container, false);
         createUI(rootView);
         getActivity().setTitle("Hours");
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
+        userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID,0);
 
+
+
+
+        getLISTS();
+
+
+
+        Log.i("SPDATA","projectList " + projectList.size()+" reactivityList "+activityList.size());
+        for (ProjectList member1 : projectList){
+            Log.i("SPDATA_project:", member1.toString());
+        }
+        for (Activity member2 : activityList){
+            Log.i("SPDATA_activity:", member2.toString());
+        }
         btn = (FloatingActionButton) getActivity().findViewById(R.id.add_reg);
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -126,6 +156,114 @@ public class HoursFragment extends Fragment  {
         return rootView;
     }
 
+    private void getLISTS() {
+        activityList = SharedPrefManager.getInstance(getActivity()).pullactivityList();
+        projectList = SharedPrefManager.getInstance(getActivity()).pullprojectList();
+        if(activityList.size()<=0||projectList.size()<=0)
+        {
+            if (token != null) {
+
+
+                //Web service to get the activity list
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Geting Activities...");
+                progressDialog.show();
+
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(APIUrl.BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                APIService service = retrofit.create(APIService.class);
+                Call<BaseResponse> call = service.getUserActivity(token);
+                call.enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        progressDialog.dismiss();
+
+                        Log.e("SERVER_RESPONSE_data","ACTIVTY :"+ String.valueOf((response.body().getData().getActivity() )));
+
+                        List<Activity>  activityList = response.body().getData().getActivity();
+
+                        // activity list to sharedpreferences
+                        SharedPrefManager.getInstance(getActivity()).pushactivityList(activityList);
+
+                        Log.e("ACTIVITY_LIST ", String.valueOf(activityList ));
+
+                        // get activitylist from sharedpreferences
+                        Log.e("SP_LIST ", String.valueOf(         SharedPrefManager.getInstance(getActivity()).pullactivityList() ));
+                        Toast.makeText(getActivity(), ""+ response.body().getData().getActivity(), Toast.LENGTH_LONG).show();
+
+                        if ( String.valueOf(response.body().getStatus() ).equals("1")) {
+
+
+//                        SharedPrefManager.getInstance(getApplicationContext()).userActivity(response.body().getData().getUser());
+//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//
+//                        finish();
+
+                        } else {
+                            Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+                call = service.getUserProjects(token,userId);
+                call.enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        progressDialog.dismiss();
+
+                        Log.e("SERVER_RESPONSE_data", "pROJECT LIST "+String.valueOf((response.body().getData().getProjectList() )));
+
+                        List<ProjectList> projectList=response.body().getData().getProjectList();
+
+                        // activity list to sharedpreferences
+                        SharedPrefManager.getInstance(getActivity()).pushprojectList(projectList);
+
+                        Log.e("PROJECT_LIST ", String.valueOf(projectList ));
+
+                        // get activitylist from sharedpreferences
+                        Log.e("SP_LIST ", String.valueOf(         SharedPrefManager.getInstance(getActivity()).pullactivityList() ));
+                        Toast.makeText(getActivity(), ""+ response.body().getData().getProjectList(), Toast.LENGTH_LONG).show();
+
+                        if ( String.valueOf(response.body().getStatus() ).equals("1")) {
+
+
+//                        SharedPrefManager.getInstance(getApplicationContext()).userActivity(response.body().getData().getUser());
+//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//
+//                        finish();
+
+                        } else {
+                            Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+
+        }
+
+
+    }
+
     private void createUI(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewHours);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -162,9 +300,7 @@ public class HoursFragment extends Fragment  {
 
         APIService service = retrofit.create(APIService.class);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
-        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID,0);
+
 
        // Toast.makeText(getActivity(),""+ userId, Toast.LENGTH_LONG).show();
 
@@ -235,7 +371,7 @@ public class HoursFragment extends Fragment  {
 
     }
 
-    public void onButtonShowPopupWindowClick(HourDetail hourDetail) {
+    public void onButtonShowPopupWindowClick(final HourDetail hourDetail, String datedate, Integer position) {
 
         // get a reference to the already created main layout
 
@@ -249,7 +385,89 @@ public class HoursFragment extends Fragment  {
         boolean focusable = true; // lets taps outside the popup also dismiss it
         popupWindow = new PopupWindow(popupView, width, height, focusable);
         Button cancel = (Button) popupView.findViewById(R.id.cancel);
-        Button submit = (Button) popupView.findViewById(R.id.submit);
+        final Button submit = (Button) popupView.findViewById(R.id.submit);
+        TextView date = (TextView) popupView.findViewById(R.id.date);
+        final TextView descp = (TextView) popupView.findViewById(R.id.descp);
+        final HorizontalNumberPicker  horizontalNumberPicker = (HorizontalNumberPicker) popupView.findViewById(R.id.horizontalNumberPicker);
+        final Spinner projects_list = (Spinner  ) popupView.findViewById(R.id.projects_list);
+        final Spinner   activity_list = (Spinner  ) popupView.findViewById(R.id.activity_list);
+        final CheckBox checkBox = (CheckBox  ) popupView.findViewById(R.id.checkBox);
+        horizontalNumberPicker.setMaxValue(12);
+        horizontalNumberPicker.setMinValue(1);
+        horizontalNumberPicker.getTextValueView()
+                .setTextColor(getResources().getColor(android.R.color.white));
+        horizontalNumberPicker.getButtonMinusView().setTextColor(getResources().getColor(android.R.color.white));
+        horizontalNumberPicker.getButtonPlusView().setTextColor(getResources().getColor(android.R.color.white));
+
+
+        List<String> activities =  new ArrayList<>();
+        activities.clear();
+        List<String> projects = new ArrayList<>();
+        projects.clear();
+
+        for (ProjectList member1 : projectList){
+//            Log.i("SPDATA_project:", member1.toString());
+            projects.add(member1.getProject().getName());
+        }
+        for (Activity member2 : activityList){
+//            Log.i("SPDATA_project:", member1.toString());
+            activities.add(member2.getName());
+        }
+
+////        getLISTS();
+// // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item, activities);
+        ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, projects);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        activity_list.setAdapter(dataAdapter1);
+        projects_list.setAdapter(dataAdapter2);
+//        activity_list.setItems(activities);
+//        projects_list.setItems(projects);
+
+        date.setText(datedate);
+        if(hourDetail.getProjId()>0)
+        {
+            int position1 = getIndexofProject(hourDetail.getProjId(),projectList);
+            projects_list.setSelection(position1);
+        }
+
+        if(!hourDetail.getActivity().isEmpty())
+        {
+            int position2 = getIndexofActivity(hourDetail.getActivity(),activityList);
+            activity_list.setSelection(position2);
+        }
+        if(hourDetail.getHours()>1)
+        {
+            horizontalNumberPicker.setValue(hourDetail.getHours());
+        }
+
+        if(!hourDetail.getDescription().isEmpty())
+        {
+            descp.setText(hourDetail.getDescription());
+        }
+
+        if(hourDetail.getExtraWork()>0)
+        {checkBox.setChecked(true);
+
+        }
+        else {
+            checkBox.setChecked(false);
+        }
+
+        if(hourDetail.getId()>0)
+        {
+            submit.setText("Update");
+        }else {
+            submit.setText("Add");
+
+        }
+
+
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,26 +476,75 @@ public class HoursFragment extends Fragment  {
 
             }
         });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hourDetail.setHours(horizontalNumberPicker.getValue());
+                hourDetail.setProjId(projectList.get(projects_list.getSelectedItemPosition()).getProjectId());
+                hourDetail.setActivity(activityList.get(activity_list.getSelectedItemPosition()).getCode()); //IMPORTANT actity sending back will be CODE
+                hourDetail.setDescription(descp.getText().toString().trim());
+                if(checkBox.isChecked())
+                {
+                    hourDetail.setExtraWork(1);
+                }
+                else {
+                    hourDetail.setExtraWork(0);
+
+                }
+
+                if(hourDetail.getId()>0)
+                {
+                    //UPDATE CALL
+
+
+                }else {
+                   //ADD CALL
+
+                }
+            }
+        });
         // show the popup window
         popupWindow.showAtLocation( rootView, Gravity.CENTER, 0, 0);
 
-        // dismiss the popup window when touched
-        popupView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
 
-                return true;
+    }
+
+    private int getIndexofActivity(String activity, List<Activity> activityList) {
+        for(int i = 0;i<activityList.size();i++)
+        {
+            if(activity.equals(activityList.get(i).getCode()))
+            {
+                return i;
             }
-        });
+        }
+        return 0;
+    }
+
+    public  int getIndexofProject(Integer projId, List<ProjectList> projectList) {
+       for(int i = 0;i<projectList.size();i++)
+        {
+           if(projId.equals(projectList.get(i).getId()))
+           {
+               return i;
+           }
+        }
+        return 0;
     }
 
 
-    public void popIt(HourDetail hourDetail) {
-        int pos  = horizontalCalendar.getSelectedDatePosition();
+    public void popIt(final HourDetail hourDetail) {
+        final int pos  = horizontalCalendar.getSelectedDatePosition();
         if(pos<=8 &&pos>=2) {
             Toast.makeText(getActivity(), "Position : " + pos + " Date :" + weekReport.get(pos - 2).getDate(), Toast.LENGTH_LONG).show();
-            onButtonShowPopupWindowClick(hourDetail);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onButtonShowPopupWindowClick(hourDetail,weekReport.get(pos - 2).getDate(),pos);
+
+            }
+        });
+
         }
     }
 
@@ -296,10 +563,6 @@ public class HoursFragment extends Fragment  {
                 .build();
 
         APIService service = retrofit.create(APIService.class);
-
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
-        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID, 0);
 
 
 
@@ -349,11 +612,6 @@ public class HoursFragment extends Fragment  {
                 .build();
 
         APIService service = retrofit.create(APIService.class);
-
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-
-        String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
-        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID, 0);
 
 
 
@@ -409,10 +667,6 @@ public class HoursFragment extends Fragment  {
 
         APIService service = retrofit.create(APIService.class);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-
-        String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
-        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID, 0);
 
 
 
