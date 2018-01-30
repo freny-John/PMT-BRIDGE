@@ -86,7 +86,7 @@ public class HoursFragment extends Fragment  {
 
 
 
-        Log.i("SPDATA","projectList " + projectList.size()+" reactivityList "+activityList.size());
+        Log.i("SPDATA","projectList   " + projectList.size()+" reactivityList "+activityList.size());
         for (ProjectList member1 : projectList){
             Log.i("SPDATA_project:", member1.toString());
         }
