@@ -32,10 +32,24 @@
         android:layout_height="@dimen/ftb_size_mini"
         android:layout_alignTop="@+id/folding_tab_bar"
         android:layout_marginTop="@dimen/additional_button_top_margin"
-        android:layout_marginLeft="@dimen/additional_button_margin"
+        android:layout_marginStart="@dimen/additional_button_margin"
         android:padding="@dimen/additional_button_top_margin"
         android:src="@drawable/add_reg"
-        android:layout_toRightOf="@+id/folding_tab_bar"/>
+        android:layout_toEndOf="@+id/folding_tab_bar"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/logout"
+        android:background="@drawable/background_additional_buttons"
+        app:backgroundTint="@color/colorLogout"
+        android:layout_width="@dimen/ftb_size_mini"
+        app:elevation="0dp"
+        app:fabSize="normal"
+        android:layout_height="@dimen/ftb_size_mini"
+        android:layout_alignTop="@+id/folding_tab_bar"
+        android:layout_marginTop="@dimen/additional_button_top_margin"
+        android:layout_marginStart="@dimen/additional_button_margin"
+        android:padding="@dimen/additional_button_top_margin"
+        android:src="@drawable/exit"
+        android:layout_toEndOf="@+id/folding_tab_bar"/>
 
 
 </RelativeLayout>

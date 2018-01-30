@@ -35,8 +35,6 @@ import com.bridge.pmt.models.BaseResponse;
 import com.bridge.pmt.models.HourDetail;
 import com.bridge.pmt.models.ProjectList;
 import com.bridge.pmt.models.WeekReport;
-import com.hrules.horizontalnumberpicker.HorizontalNumberPicker;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 
 
 import java.util.ArrayList;
@@ -384,20 +382,22 @@ public class HoursFragment extends Fragment  {
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = true; // lets taps outside the popup also dismiss it
         popupWindow = new PopupWindow(popupView, width, height, focusable);
+        popupWindow.setAnimationStyle(R.style.popup_window_animation);
+
         Button cancel = (Button) popupView.findViewById(R.id.cancel);
         final Button submit = (Button) popupView.findViewById(R.id.submit);
         TextView date = (TextView) popupView.findViewById(R.id.date);
         final TextView descp = (TextView) popupView.findViewById(R.id.descp);
-        final HorizontalNumberPicker  horizontalNumberPicker = (HorizontalNumberPicker) popupView.findViewById(R.id.horizontalNumberPicker);
+//        final HorizontalNumberPicker  horizontalNumberPicker = (HorizontalNumberPicker) popupView.findViewById(R.id.horizontalNumberPicker);
         final Spinner projects_list = (Spinner  ) popupView.findViewById(R.id.projects_list);
         final Spinner   activity_list = (Spinner  ) popupView.findViewById(R.id.activity_list);
         final CheckBox checkBox = (CheckBox  ) popupView.findViewById(R.id.checkBox);
-        horizontalNumberPicker.setMaxValue(12);
-        horizontalNumberPicker.setMinValue(1);
-        horizontalNumberPicker.getTextValueView()
-                .setTextColor(getResources().getColor(android.R.color.white));
-        horizontalNumberPicker.getButtonMinusView().setTextColor(getResources().getColor(android.R.color.white));
-        horizontalNumberPicker.getButtonPlusView().setTextColor(getResources().getColor(android.R.color.white));
+//        horizontalNumberPicker.setMaxValue(12);
+//        horizontalNumberPicker.setMinValue(1);
+//        horizontalNumberPicker.getTextValueView()
+//                .setTextColor(getResources().getColor(android.R.color.white));
+//        horizontalNumberPicker.getButtonMinusView().setTextColor(getResources().getColor(android.R.color.white));
+//        horizontalNumberPicker.getButtonPlusView().setTextColor(getResources().getColor(android.R.color.white));
 
 
         List<String> activities =  new ArrayList<>();
@@ -443,7 +443,7 @@ public class HoursFragment extends Fragment  {
         }
         if(hourDetail.getHours()>1)
         {
-            horizontalNumberPicker.setValue(hourDetail.getHours());
+//            horizontalNumberPicker.setValue(hourDetail.getHours());
         }
 
         if(!hourDetail.getDescription().isEmpty())
@@ -480,7 +480,7 @@ public class HoursFragment extends Fragment  {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hourDetail.setHours(horizontalNumberPicker.getValue());
+//                hourDetail.setHours(horizontalNumberPicker.getValue());
                 hourDetail.setProjId(projectList.get(projects_list.getSelectedItemPosition()).getProjectId());
                 hourDetail.setActivity(activityList.get(activity_list.getSelectedItemPosition()).getCode()); //IMPORTANT actity sending back will be CODE
                 hourDetail.setDescription(descp.getText().toString().trim());

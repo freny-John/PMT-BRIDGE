@@ -9,14 +9,14 @@
         android:layout_width="wrap_content"
         android:layout_margin="50dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/emptynews"
+        android:src="@drawable/empty_account"
         android:layout_height="wrap_content" />
 
 
     <TextView
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="142dp"
+        android:layout_marginBottom="122dp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:text="Our service monkeys are on the way!"
@@ -24,12 +24,5 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView" />
 
-    <Button
-        android:id="@+id/btnLogOutId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textAllCaps="false"
-        android:background="@color/colorGreen"
-        android:text="Log Out" />
+
 </RelativeLayout>

@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     TextView title;
     ActionBar ab;
     FloatingActionButton add_reg;
+    FloatingActionButton logout;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -87,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
         //Folding Tab Bar
         FoldingTabBar tabBar = (FoldingTabBar) findViewById(R.id.folding_tab_bar);
         add_reg = (FloatingActionButton) findViewById(R.id.add_reg);
+        logout = (FloatingActionButton) findViewById(R.id.logout);
         add_reg.setVisibility(View.GONE);
+        logout.setVisibility(View.GONE);
         changeFragment(new NewsFragment());
 
         tabBar.setOnFoldingItemClickListener(new FoldingTabBar.OnFoldingItemSelectedListener() {
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         changeFragment(new NewsFragment());
                         title.setText("NEWS");
                         add_reg.setVisibility(View.GONE);
+                        logout.setVisibility(View.GONE);
 
 
                         break;
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         changeFragment(new HoursFragment());
                         title.setText("HOURS");
                         add_reg.setVisibility(View.VISIBLE);
+                        logout.setVisibility(View.GONE);
 
 
                         break;
@@ -112,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         changeFragment(new LeaveFragment());
                         title.setText("LEAVE & HOLIDAYS");
                         add_reg.setVisibility(View.GONE);
+                        logout.setVisibility(View.GONE);
 
 
                         break;
@@ -119,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                         changeFragment(new AccountFragment());
                         title.setText("ACCOUNT");
                         add_reg.setVisibility(View.GONE);
+                        logout.setVisibility(View.VISIBLE);
 
 
                         break;
@@ -127,14 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-
-
-
-
-
-
 
 //        mTextMessage = (TextView) findViewById(R.id.message);
 //        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -160,12 +159,9 @@ public class MainActivity extends AppCompatActivity {
 
         //loading home fragment by default
        // displaySelectedScreen(R.id.nav_news);
-
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         if (sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null) != null) {
-
-
 //            TextView txtUserName   = (TextView)header.findViewById(R.id.txtUserNameId);
 //            TextView txtUserEmail = (TextView)header.findViewById(R.id.txtUserEmailId);
 //
@@ -174,26 +170,11 @@ public class MainActivity extends AppCompatActivity {
 
 
           //  Toast.makeText(getApplicationContext(), sharedPreferences.getString(SharedPrefManager.KEY_USER_NAME, null), Toast.LENGTH_LONG).show();
-
-
         }
-
-
         if (!SharedPrefManager.getInstance(this).isLoggedIn()) {
-
-
             startActivity(new Intent(this, SignInActivity.class));
             finish();
-
         }
-
-        add_reg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
 
     }
 
