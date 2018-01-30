@@ -45,6 +45,7 @@ dependencies {
     //Material spinner
     compile 'com.jaredrummler:material-spinner:1.2.4'
 
+    compile 'com.hrules:horizontalnumberpicker:1.1.1'
 
 
 }
