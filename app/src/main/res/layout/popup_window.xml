@@ -93,6 +93,7 @@
         <CheckBox
             android:id="@+id/checkBox"
             android:layout_below="@+id/descp"
+            android:layout_marginTop="16dp"
             android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,6 +116,10 @@
             android:textAllCaps="false"
             android:layout_weight="1"
             android:layout_height="wrap_content" />
+        <View
+            android:layout_width="1dp"
+            android:background="@color/colorGreenlight"
+            android:layout_height="match_parent"/>
         <Button
             android:id="@+id/submit"
             android:layout_width="0dp"

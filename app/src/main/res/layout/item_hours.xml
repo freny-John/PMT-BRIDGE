@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorLogout">
+
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/trash" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/delete_icon"
+            android:text="@string/delete"
+            android:textColor="#fff"
+            android:textSize="13sp" />
+
+    </RelativeLayout>
+<RelativeLayout
                 android:id="@+id/relloy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -10,7 +39,7 @@
         android:id="@+id/time"
         android:text="8"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:layout_width="wrap_content"
@@ -36,7 +65,7 @@
         android:id="@+id/activty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:textSize="24sp"
@@ -52,6 +81,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:maxLength="150"
+        android:minLines="1"
+        android:maxLines="1"
         android:layout_below="@+id/activty"
         android:layout_centerHorizontal="true"
         android:textColor="@color/color_small_text"
@@ -61,10 +92,14 @@
             android:id="@+id/extra"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
+            android:layout_marginEnd="32dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:src="@drawable/extratime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
 
     <View
         android:background="@color/colorPrimary"
@@ -73,3 +108,4 @@
         android:layout_height="1dp"/>
 
 </RelativeLayout>
+</FrameLayout>

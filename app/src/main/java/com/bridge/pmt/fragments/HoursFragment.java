@@ -1,15 +1,21 @@
 package com.bridge.pmt.fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,11 +30,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bridge.pmt.MainActivity;
 import com.bridge.pmt.R;
 import com.bridge.pmt.adapters.HoursAdapter;
 import com.bridge.pmt.api.APIService;
 import com.bridge.pmt.api.APIUrl;
 import com.bridge.pmt.helpers.ConnectivityReceiver;
+import com.bridge.pmt.helpers.RecyclerItemTouchHelper;
 import com.bridge.pmt.helpers.SharedPrefManager;
 import com.bridge.pmt.models.Activity;
 import com.bridge.pmt.models.BaseResponse;
@@ -37,8 +45,11 @@ import com.bridge.pmt.models.ProjectList;
 import com.bridge.pmt.models.WeekReport;
 import com.hrules.horizontalnumberpicker.HorizontalNumberPicker;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
@@ -52,7 +63,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 
-public class HoursFragment extends Fragment {
+public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     RecyclerView recyclerView;
     LinearLayout empty;
@@ -66,10 +77,9 @@ public class HoursFragment extends Fragment {
     String token;
     int userId;
     private HorizontalCalendar horizontalCalendar;
-    private RecyclerView.Adapter adapter;
+    private HoursAdapter adapter;
     private List<WeekReport> weekReport;
     private List<HourDetail> currenthourDetails;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,7 +148,6 @@ public class HoursFragment extends Fragment {
         endDate.setTime(c.getTime());
         endDate.add(Calendar.DAY_OF_YEAR, 6);
         empty = (LinearLayout) rootView.findViewById(R.id.empty);
-
         // Default Date set to Today.
         final Calendar defaultSelectedDate = Calendar.getInstance();
         horizontalCalendar = new HorizontalCalendar.Builder(rootView, R.id.calendarView)
@@ -183,8 +192,40 @@ public class HoursFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = df.format(c.getTime());
+                final int pos = horizontalCalendar.getSelectedDatePosition();
+                Date current = null;
+                Date clciked = null;
+                try {
+                     current = df.parse(formattedDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    clciked = df.parse( weekReport.get(pos - 2).getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
-                popIt(new HourDetail());
+                Log.i("ADDDDDD"," formattedDate "+formattedDate+" week "+ weekReport.get(pos - 2).getDate());
+
+                assert current != null;
+                if (current.compareTo(clciked) >= 0)
+                {
+                   // cuurent is after or on clicked
+                                    popIt(new HourDetail());
+//                    Toast.makeText(getActivity(), "Good", Toast.LENGTH_LONG).show();
+
+
+                }
+                else {
+                    Toast.makeText(getActivity(), "Please check your phone date.", Toast.LENGTH_LONG).show();
+
+                }
+
+
             }
         });
 
@@ -307,6 +348,9 @@ public class HoursFragment extends Fragment {
         adapter = new HoursAdapter(currenthourDetails, getContext(), HoursFragment.this);
 
         recyclerView.setAdapter(adapter);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
 
     }
 
@@ -569,6 +613,7 @@ public class HoursFragment extends Fragment {
     }
 
 
+
     public void popIt(final HourDetail hourDetail) {
        if(weekReport.size()>0) {
            final int pos = horizontalCalendar.getSelectedDatePosition();
@@ -711,7 +756,7 @@ public class HoursFragment extends Fragment {
 
     //Web service to Delete the hour report
 
-    private void deleteHourReport() {
+    private void deleteHourReport(HourDetail hourDetail) {
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Deleting ...");
@@ -757,4 +802,51 @@ public class HoursFragment extends Fragment {
     }
 
 
+    @Override
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof HoursAdapter.ViewHolder0) {
+            final HourDetail deletedItem = currenthourDetails.get(viewHolder.getAdapterPosition());
+            final int deletedIndex = viewHolder.getAdapterPosition();
+            adapter.removeItem(viewHolder.getAdapterPosition());
+
+//                   deleteHourReport(((HoursAdapter.ViewHolder) viewHolder).hourDetail);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = this.getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.layout_dialog, null);
+            alertDialogBuilder.setView(dialogView);
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            final Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+            final Button done = (Button) dialogView.findViewById(R.id.submit);
+            done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+
+                    adapter.restoreItem(deletedItem, deletedIndex);
+
+                }
+            });
+
+
+
+            alertDialog.show();
+
+
+
+
+
+
+
+
+
+        }
+    }
 }

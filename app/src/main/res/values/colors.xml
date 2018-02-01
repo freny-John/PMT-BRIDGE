@@ -11,5 +11,6 @@
     <color name="color_chat_user_name">#6BCEF7</color>
     <color name="color_small_text">#958CC8</color>
     <color name="colorLogout">#ec4264</color>
+    <color name="colorGreenlight">#42c2ac</color>
 
 </resources>
