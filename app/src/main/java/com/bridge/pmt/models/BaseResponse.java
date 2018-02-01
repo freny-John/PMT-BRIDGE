@@ -21,13 +21,13 @@ public class BaseResponse {
 
     /**
      * No args constructor for use in serialization
-     * 
+     *
      */
     public BaseResponse() {
     }
 
     /**
-     * 
+     *
      * @param message
      * @param status
      * @param data

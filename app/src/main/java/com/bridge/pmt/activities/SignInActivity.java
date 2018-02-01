@@ -20,6 +20,7 @@ import com.bridge.pmt.MainActivity;
 import com.bridge.pmt.R;
 import com.bridge.pmt.api.APIService;
 import com.bridge.pmt.api.APIUrl;
+import com.bridge.pmt.helpers.ConnectivityReceiver;
 import com.bridge.pmt.helpers.SharedPrefManager;
 import com.bridge.pmt.helpers.ValidationManager;
 import com.bridge.pmt.models.BaseResponse;
@@ -104,7 +105,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
 //                Log.v("SERVER-RESPONSE", String.valueOf(response.body().getToken() ));
 
-             Log.e("SERVER-RESPONSE-data", String.valueOf((response.body().getStatus() )));
+             Log.e("SERVER-RESPONSE-data", String.valueOf((response.body() )));
 //                Toast.makeText(getApplicationContext(),response.body().getToken()  , Toast.LENGTH_LONG).show();
 
                 if ( String.valueOf(response.body().getStatus() ).equals("1")) {
@@ -116,7 +117,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                   finish();
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "User Not Found!", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -150,7 +151,18 @@ else{
     @Override
     public void onClick(View view) {
         if (view == buttonSignIn) {
-            userSignIn();
+
+
+            if (ConnectivityReceiver.isConnected()) {
+                userSignIn();
+            } else {
+                Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+
+            }
+
+
+
+
         }
     }
 }

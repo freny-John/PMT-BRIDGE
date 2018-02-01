@@ -30,6 +30,7 @@ import com.bridge.pmt.fragments.HoursFragment;
 import com.bridge.pmt.fragments.LeaveFragment;
 import com.bridge.pmt.fragments.NewsFragment;
 import com.bridge.pmt.fragments.AccountFragment;
+import com.bridge.pmt.helpers.ConnectivityReceiver;
 import com.bridge.pmt.helpers.SharedPrefManager;
 import com.bridge.pmt.models.Activity;
 import com.bridge.pmt.models.BaseResponse;
@@ -47,7 +48,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     private TextView mTextMessage;
     TextView title;
@@ -279,17 +280,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+       if(ConnectivityReceiver.isConnected()) {
+           getProject_Activity_List();
+    }
+else{
+           Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+
+       }}
 
 
 
+
+    private void getProject_Activity_List()
+
+    {
         //Geting the user token from sharedpreference
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
         int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID,0);
 
         if (token != null) {
-
-
             //Web service to get the activity list
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setMessage("Geting Activities...");
@@ -310,16 +320,16 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.e("SERVER_RESPONSE_data","ACTIVTY :"+ String.valueOf((response.body().getData().getActivity() )));
 
-                   List <Activity> activityList=response.body().getData().getActivity();
+                    List <Activity> activityList=response.body().getData().getActivity();
 
-                   // activity list to sharedpreferences
+                    // activity list to sharedpreferences
                     SharedPrefManager.getInstance(getApplicationContext()).pushactivityList(activityList);
 
                     Log.e("ACTIVITY_LIST ", String.valueOf(activityList ));
 
                     // get activitylist from sharedpreferences
                     Log.e("SP_LIST ", String.valueOf(         SharedPrefManager.getInstance(getApplicationContext()).pullactivityList() ));
-                    Toast.makeText(getApplicationContext(), ""+ response.body().getData().getActivity(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), ""+ response.body().getData().getActivity(), Toast.LENGTH_LONG).show();
 
                     if ( String.valueOf(response.body().getStatus() ).equals("1")) {
 
@@ -350,16 +360,16 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.e("SERVER_RESPONSE_data", "pROJECT LIST "+String.valueOf((response.body().getData().getProjectList() )));
 
-                   List projectList=response.body().getData().getProjectList();
+                    List projectList=response.body().getData().getProjectList();
 
-                   // activity list to sharedpreferences
+                    // activity list to sharedpreferences
                     SharedPrefManager.getInstance(getApplicationContext()).pushprojectList(projectList);
 
                     Log.e("PROJECT_LIST ", String.valueOf(projectList ));
 
                     // get activitylist from sharedpreferences
                     Log.e("SP_LIST ", String.valueOf(         SharedPrefManager.getInstance(getApplicationContext()).pullactivityList() ));
-                    Toast.makeText(getApplicationContext(), ""+ response.body().getData().getProjectList(), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(getApplicationContext(), ""+ response.body().getData().getProjectList(), Toast.LENGTH_LONG).show();
 
                     if ( String.valueOf(response.body().getStatus() ).equals("1")) {
 
@@ -385,11 +395,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
 
 
-
-
-
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
 
 
 

@@ -50,7 +50,7 @@ public interface APIService {
             @Query("token") String token,
 
             @Field("user_id") int user_id,
-            @Field("pdate") String pdate,
+            @Field("report_date") String pdate,
             @Field("hours") int hours,
             @Field("proj_id") int proj_id,
             @Field("activity") String activity,
@@ -64,13 +64,14 @@ public interface APIService {
     Call<BaseResponse> updateHourReport(
             @Query("token") String token,
 
-            @Field("user_id") int user_id,
-            @Field("pdate") String pdate,
+
+            @Field("report_date") String pdate,
             @Field("hours") int hours,
             @Field("proj_id") int proj_id,
             @Field("activity") String activity,
             @Field("description") String description,
-            @Field("extra_work") int extra_work
+            @Field("extra_work") int extra_work,
+            @Field("report_id") int report_id
     );
 
 
