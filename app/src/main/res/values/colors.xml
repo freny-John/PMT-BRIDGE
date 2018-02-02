@@ -12,5 +12,6 @@
     <color name="color_small_text">#958CC8</color>
     <color name="colorLogout">#ec4264</color>
     <color name="colorGreenlight">#42c2ac</color>
+    <color name="colorText">#ffffff</color>
 
 </resources>

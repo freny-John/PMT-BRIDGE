@@ -41,7 +41,7 @@ public class HourDetail {
         this.id = 0;
         this.userId = 0;
         this.pdate = "";
-        this.hours = 1.0;
+        this.hours = 0.0;
         this.projId = 0;
         this.activity = "";
         this.description = "";

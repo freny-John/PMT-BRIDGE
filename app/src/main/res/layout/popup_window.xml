@@ -20,12 +20,14 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@color/colorPrimaryDark"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/projectstv"
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:text="Project"
             android:textColor="@android:color/white"
@@ -63,21 +65,26 @@
             <!--/>-->
 
 
-        <com.hrules.horizontalnumberpicker.HorizontalNumberPicker
+        <com.bridge.pmt.helpers.DecimalPicker
             android:layout_below="@+id/activity_list"
             android:id="@+id/horizontalNumberPicker"
-            android:layout_margin="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/edit_bg"
             android:layout_width="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
             />
+
         <EditText
             android:id="@+id/descp"
             android:maxLength="100"
             android:maxLines="5"
             android:gravity="start|top"
             android:minLines="5"
+            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_below="@+id/horizontalNumberPicker"
             android:layout_height="wrap_content"
@@ -93,7 +100,8 @@
         <CheckBox
             android:id="@+id/checkBox"
             android:layout_below="@+id/descp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -303,6 +303,7 @@ else{
             //Web service to get the activity list
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setMessage("Geting Activities...");
+            progressDialog.setCancelable(false);
             progressDialog.show();
 
 
@@ -340,7 +341,7 @@ else{
 //                        finish();
 
                     } else {
-                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -380,7 +381,7 @@ else{
 //                        finish();
 
                     } else {
-                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
 

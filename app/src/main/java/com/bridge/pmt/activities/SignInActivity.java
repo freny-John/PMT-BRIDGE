@@ -85,6 +85,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Signing Up...");
+        progressDialog.setCancelable(false);
+
         progressDialog.show();
 
 
