@@ -176,7 +176,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                     currenthourDetails.addAll(weekReport.get(position - 2).getHourDetails());
                 }
                 adapter.notifyDataSetChanged();
-                Log.i("ADAPTERADD ", "1");
+                Log.i("ADAPTERADD ", "12323");
 
                 if (currenthourDetails.size() > 0) {
                     empty.setVisibility(View.GONE);
