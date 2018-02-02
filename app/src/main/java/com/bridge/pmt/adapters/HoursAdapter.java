@@ -72,7 +72,7 @@ public class HoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 });
                 if(viewHolder0.hourDetail.getExtraWork()==0)
                 {
-                    viewHolder0.extra.setVisibility(View.GONE);
+                    viewHolder0.extra.setVisibility(View.INVISIBLE);
                 }
                 else {
                     viewHolder0.extra.setVisibility(View.VISIBLE);

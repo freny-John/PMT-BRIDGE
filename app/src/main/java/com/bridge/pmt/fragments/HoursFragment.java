@@ -221,7 +221,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
                 }
                 else {
-                    Toast.makeText(getActivity(), "Please check your phone date.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "You cannot enter data for future dates", Toast.LENGTH_LONG).show();
 
                 }
 
@@ -771,32 +771,32 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         APIService service = retrofit.create(APIService.class);
 
 
-//
-//        Call<BaseResponse> call = service.deleteHourReport(token, report_id);
-//
-//        call.enqueue(new Callback<BaseResponse>() {
-//            @Override
-//            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-//                progressDialog.dismiss();
-//
-//
-//                Log.e("RESPONSE-data", String.valueOf((response.body())));
-//
-//                Toast.makeText(getActivity(),response.body().getMessage()  , Toast.LENGTH_LONG).show();
-//
-//                if (response.body().getStatus().equals(1)) {
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<BaseResponse> call, Throwable t) {
-//                progressDialog.dismiss();
-//                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-//
-//            }
-        //   });
+
+        Call<BaseResponse> call = service.deleteHourReport(token, hourDetail.getId());
+
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                progressDialog.dismiss();
+
+
+                Log.e("RESPONSE-data", String.valueOf((response.body())));
+
+                Toast.makeText(getActivity(),response.body().getMessage()  , Toast.LENGTH_LONG).show();
+
+                if (response.body().getStatus().equals(1)) {
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+           });
 
 
     }
@@ -804,12 +804,12 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
     @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, int position) {
+
         if (viewHolder instanceof HoursAdapter.ViewHolder0) {
             final HourDetail deletedItem = currenthourDetails.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
             adapter.removeItem(viewHolder.getAdapterPosition());
 
-//                   deleteHourReport(((HoursAdapter.ViewHolder) viewHolder).hourDetail);
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = this.getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.layout_dialog, null);
@@ -817,10 +817,25 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
             final AlertDialog alertDialog = alertDialogBuilder.create();
 
             final Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+            final TextView title = (TextView) dialogView.findViewById(R.id.diatitle);
+            final TextView msg = (TextView) dialogView.findViewById(R.id.textdialog);
+            title.setText("Delete Entry");
+            msg.setText("Are you sure you want to delete this entry?");
             final Button done = (Button) dialogView.findViewById(R.id.submit);
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+                    if (ConnectivityReceiver.isConnected()) {
+                        Log.e("REPOT ID", String.valueOf(((HoursAdapter.ViewHolder0) viewHolder).hourDetail.getId()));
+                   deleteHourReport(((HoursAdapter.ViewHolder0) viewHolder).hourDetail);
+
+                    } else {
+                        Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
+
+                    }
+
                     alertDialog.dismiss();
                 }
             });

@@ -77,7 +77,7 @@ public interface APIService {
 
     @FormUrlEncoded
     @POST("api/v5/deleteReport")
-    Call<BaseResponse> deletReport(
+    Call<BaseResponse> deleteHourReport(
             @Query("token") String token,
 
             @Field("report_id") int report_id

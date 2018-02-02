@@ -41,11 +41,6 @@
 
 
 
-        <activity android:name=".activities.SettingsActivity"
-            android:theme="@style/AppTheme"/>
-
-
-
 
     </application>
 
