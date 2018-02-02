@@ -428,7 +428,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
             public void onFailure(Call<BaseResponse> call, Throwable t) {
                 progressDialog.dismiss();
 
-                //Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+           Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -506,7 +506,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
             activity_list.setSelection(position2);
         }
         if (hourDetail.getHours() > 1) {
-            horizontalNumberPicker.setValue(hourDetail.getHours());
+            horizontalNumberPicker.setValue(hourDetail.getHours().intValue());
         }
 
         if (!hourDetail.getDescription().isEmpty()) {
@@ -539,7 +539,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hourDetail.setHours(horizontalNumberPicker.getValue());
+                hourDetail.setHours((double) horizontalNumberPicker.getValue());
                 hourDetail.setProjId(projectList.get(projects_list.getSelectedItemPosition()).getProjectId());
                 hourDetail.setActivity(activityList.get(activity_list.getSelectedItemPosition()).getCode()); //IMPORTANT actity sending back will be CODE
                 hourDetail.setDescription(descp.getText().toString().trim());
@@ -732,10 +732,25 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
                 if (response.body().getStatus().equals(1)) {
 
-                    //Refreshing the Project,Activity and Hour Report Lists
-                    getProject_ActivityList();
-                    getWeeklyHourReport();
-                    popupWindow.dismiss();
+
+
+
+                    if (ConnectivityReceiver.isConnected()) {
+
+                        //Refreshing the Project,Activity and Hour Report Lists
+                        getProject_ActivityList();
+                        getWeeklyHourReport();
+                        popupWindow.dismiss();
+
+
+                    } else {
+                        Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
+
+                    }
+
+
+
+
                 }
 
 

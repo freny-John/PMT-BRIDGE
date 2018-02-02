@@ -51,7 +51,7 @@ public interface APIService {
 
             @Field("user_id") int user_id,
             @Field("report_date") String pdate,
-            @Field("hours") int hours,
+            @Field("hours") double hours,
             @Field("proj_id") int proj_id,
             @Field("activity") String activity,
             @Field("description") String description,
@@ -66,7 +66,7 @@ public interface APIService {
 
 
             @Field("report_date") String pdate,
-            @Field("hours") int hours,
+            @Field("hours") double hours,
             @Field("proj_id") int proj_id,
             @Field("activity") String activity,
             @Field("description") String description,

@@ -19,7 +19,7 @@ public class HourDetail {
     private String pdate;
     @SerializedName("hours")
     @Expose
-    private Integer hours;
+    private Double hours;
     @SerializedName("proj_id")
     @Expose
     private Integer projId;
@@ -41,7 +41,7 @@ public class HourDetail {
         this.id = 0;
         this.userId = 0;
         this.pdate = "";
-        this.hours = 1;
+        this.hours = 1.0;
         this.projId = 0;
         this.activity = "";
         this.description = "";
@@ -59,7 +59,7 @@ public class HourDetail {
      * @param pdate
      * @param activity
      */
-    public HourDetail(Integer id, Integer userId, String pdate, Integer hours, Integer projId, String activity, String description, Integer extraWork) {
+    public HourDetail(Integer id, Integer userId, String pdate, Double hours, Integer projId, String activity, String description, Integer extraWork) {
         super();
         this.id = id;
         this.userId = userId;
@@ -95,11 +95,11 @@ public class HourDetail {
         this.pdate = pdate;
     }
 
-    public Integer getHours() {
+    public Double getHours() {
         return hours;
     }
 
-    public void setHours(Integer hours) {
+    public void setHours(Double hours) {
         this.hours = hours;
     }
 
