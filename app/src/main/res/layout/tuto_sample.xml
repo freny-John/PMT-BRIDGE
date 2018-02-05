@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:background="#c1000000"
+    >
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="You can swipe from right to left to delete entry"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"/>
+
+</RelativeLayout>

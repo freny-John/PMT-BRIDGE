@@ -2,6 +2,7 @@ package com.bridge.pmt.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,7 @@ import com.bridge.pmt.adapters.HoursAdapter;
 import com.bridge.pmt.helpers.ConnectivityReceiver;
 import com.bridge.pmt.helpers.SharedPrefManager;
 import com.bridge.pmt.models.HourDetail;
+import com.wooplr.spotlight.SpotlightView;
 
 
 public class AccountFragment extends Fragment {
@@ -48,6 +50,7 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Account");
+        CoachExit();
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +100,29 @@ public class AccountFragment extends Fragment {
             }
         });
 
+    }
+
+    public void  CoachExit(){
+        new SpotlightView.Builder(getActivity())
+                .introAnimationDuration(400)
+//                            .enableRevealAnimation(isRevealEnabled)
+                .performClick(true)
+                .fadeinTextDuration(400)
+                .headingTvColor(Color.parseColor("#66639E"))
+                .headingTvSize(32)
+                .headingTvText("Logout")
+                .subHeadingTvColor(Color.parseColor("#958CC8"))
+                .subHeadingTvSize(16)
+                .subHeadingTvText("Do you wanna logout of the app?\nClick on the exit icon.")
+                .maskColor(Color.parseColor("#dc000000"))
+                .target(exit)
+                .lineAnimDuration(400)
+                .lineAndArcColor(Color.parseColor("#ec4264"))
+                .dismissOnTouch(true)
+                .dismissOnBackPress(true)
+                .enableDismissAfterShown(true)
+                            .usageId("exit") //UNIQUE ID
+                .show();
     }
 
 }

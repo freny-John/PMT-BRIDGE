@@ -112,11 +112,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
                 if ( String.valueOf(response.body().getStatus() ).equals("1")) {
 
-
-                SharedPrefManager.getInstance(getApplicationContext()).userDetails(response.body().getData().getUser());
+//                if(response.body().getData().getUser().getActiveUser()==1&&response.body().getData().getUser().getRoleId()==0)
+//                {
+                    SharedPrefManager.getInstance(getApplicationContext()).userDetails(response.body().getData().getUser());
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
                   finish();
+//                }else {
+//                    Toast.makeText(getApplicationContext(), "You are not authorised to use this app!", Toast.LENGTH_LONG).show();
+//
+//                }
 
                 } else {
                     Toast.makeText(getApplicationContext(), "User Not Found!", Toast.LENGTH_LONG).show();

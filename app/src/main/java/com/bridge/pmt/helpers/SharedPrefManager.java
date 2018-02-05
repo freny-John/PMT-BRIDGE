@@ -52,6 +52,7 @@ public class SharedPrefManager {
     private static final String KEY_PRODUCTION= "production";
     private static final String KEY_ROLE_ID= "role_id";
     public static final String KEY_USER_TOKEN= "token";
+    public static final String KEY_FIRST_SWIPE= "KEY_FIRST_SWIPE";
 
     private SharedPrefManager(Context context) {
         mCtx = context;
@@ -129,6 +130,18 @@ public class SharedPrefManager {
         editor.clear();
         editor.apply();
         return true;
+    }
+
+    public boolean isFirsttime() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        if (sharedPreferences.getBoolean(KEY_FIRST_SWIPE, true))
+        {editor.putBoolean(KEY_FIRST_SWIPE,false);
+        editor.apply();
+            return true;}
+        else
+        {  return false;}
     }
 
 

@@ -27,40 +27,44 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (viewHolder != null) {
+            if(viewHolder instanceof HoursAdapter.ViewHolder0 ) {
+
             final View foregroundView = ((HoursAdapter.ViewHolder0) viewHolder).relloy;
 
             getDefaultUIUtil().onSelected(foregroundView);
-        }
+        }}
     }
 
     @Override
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                 int actionState, boolean isCurrentlyActive) {
+        if(viewHolder instanceof HoursAdapter.ViewHolder0 ) {
         final View foregroundView = ((HoursAdapter.ViewHolder0) viewHolder).relloy;
         getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
-                actionState, isCurrentlyActive);
+                actionState, isCurrentlyActive);}
     }
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        if(viewHolder instanceof HoursAdapter.ViewHolder0 ) {
         final View foregroundView =((HoursAdapter.ViewHolder0) viewHolder).relloy;
-        getDefaultUIUtil().clearView(foregroundView);
+        getDefaultUIUtil().clearView(foregroundView);}
     }
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView,
                             RecyclerView.ViewHolder viewHolder, float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((HoursAdapter.ViewHolder0) viewHolder).relloy;
+        if(viewHolder instanceof HoursAdapter.ViewHolder0 ) {  final View foregroundView = ((HoursAdapter.ViewHolder0) viewHolder).relloy;
 
         getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
-                actionState, isCurrentlyActive);
+                actionState, isCurrentlyActive);}
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        listener.onSwiped(viewHolder, direction, viewHolder.getAdapterPosition());
+        if(viewHolder instanceof HoursAdapter.ViewHolder0 ) {  listener.onSwiped(viewHolder, direction, viewHolder.getAdapterPosition());}
     }
 
     @Override

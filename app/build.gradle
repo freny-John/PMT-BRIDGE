@@ -9,7 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary= true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -29,7 +29,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-
     //Retrofit Networking
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
@@ -37,7 +36,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.6'
 
     //Folding Tab
- compile  'com.github.Yalantis:OfficialFoldingTabBar.Android:v0.9'
+    compile 'com.github.Yalantis:OfficialFoldingTabBar.Android:v0.9'
 
     //Horizondal Calendar
     compile 'devs.mulham.horizontalcalendar:horizontalcalendar:1.3.0'
@@ -45,6 +44,9 @@ dependencies {
     //Material spinner
     compile 'com.jaredrummler:material-spinner:1.2.4'
 
+    //coach marks
 
+    compile 'com.github.wooplr:Spotlight:1.2.3'
+    compile 'com.github.florent37:tutoshowcase:1.0.1'
 
 }

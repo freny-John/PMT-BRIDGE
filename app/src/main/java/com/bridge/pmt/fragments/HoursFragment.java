@@ -2,16 +2,12 @@ package com.bridge.pmt.fragments;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +40,8 @@ import com.bridge.pmt.models.BaseResponse;
 import com.bridge.pmt.models.HourDetail;
 import com.bridge.pmt.models.ProjectList;
 import com.bridge.pmt.models.WeekReport;
+import com.github.florent37.tutoshowcase.TutoShowcase;
+import com.wooplr.spotlight.SpotlightView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -95,6 +93,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         }
 
 
+
     }
 
 
@@ -141,6 +140,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
             Log.i("SPDATA_activity:", member2.toString());
         }
         btn = (FloatingActionButton) getActivity().findViewById(R.id.add_reg);
+        CoachAdd();
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         Calendar endDate = Calendar.getInstance();
@@ -406,6 +406,8 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                     }
 
                     adapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(currenthourDetails.size());
+
                     Log.i("ADAPTERADD ", "1");
 
                     if (currenthourDetails.size() > 0) {
@@ -683,6 +685,8 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                         getProject_ActivityList();
                         getWeeklyHourReport();
                         popupWindow.dismiss();
+                        CoachSwipe();
+
                     } else {
                         Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
 
@@ -842,6 +846,9 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
             final View dialogView = inflater.inflate(R.layout.layout_dialog, null);
             alertDialogBuilder.setView(dialogView);
             final AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setCancelable(false);
+
 
             final Button cancel = (Button) dialogView.findViewById(R.id.cancel);
             final TextView title = (TextView) dialogView.findViewById(R.id.diatitle);
@@ -891,4 +898,41 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
         }
     }
+
+
+       public void  CoachAdd(){
+            new SpotlightView.Builder(getActivity())
+                    .introAnimationDuration(400)
+//                            .enableRevealAnimation(isRevealEnabled)
+                    .performClick(true)
+                    .fadeinTextDuration(400)
+                    .headingTvColor(Color.parseColor("#66639E"))
+                    .headingTvSize(32)
+                    .headingTvText("Add New Report")
+                    .subHeadingTvColor(Color.parseColor("#958CC8"))
+                    .subHeadingTvSize(16)
+                    .subHeadingTvText("Wanna add today's hour report?\nClick on the add icon.")
+                    .maskColor(Color.parseColor("#dc000000"))
+                    .target(btn)
+                    .lineAnimDuration(400)
+                    .lineAndArcColor(Color.parseColor("#4bd7bf"))
+                    .dismissOnTouch(true)
+                    .dismissOnBackPress(true)
+                    .enableDismissAfterShown(true)
+                            .usageId("add") //UNIQUE ID
+                    .show();
+        }
+
+
+        public void CoachSwipe(){
+
+           if(SharedPrefManager.getInstance(getActivity()).isFirsttime())
+           {  TutoShowcase.from((MainActivity)getActivity())
+                       .setContentView(R.layout.tuto_sample)
+                   .setFitsSystemWindows(true)
+                    .on(R.id.activity_main)
+                    .displaySwipableLeft()
+                    .duration(300)
+                    .show();}
+        }
 }
