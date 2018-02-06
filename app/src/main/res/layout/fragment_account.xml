@@ -7,22 +7,23 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_margin="50dp"
-        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:src="@drawable/empty_account"
-        android:layout_height="wrap_content" />
+        android:id="@+id/imageView" />
 
 
     <TextView
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="122dp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:text="Our service monkeys are on the way!"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:text="Our service monkeys are on the way!"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>
