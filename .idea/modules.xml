@@ -4,12 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PMT-BRIDGE.iml" filepath="$PROJECT_DIR$/PMT-BRIDGE.iml" />
       <module fileurl="file://C:\Android-Studio-Workspace\PMT-BRIDGE\PMT-BRIDGE.iml" filepath="C:\Android-Studio-Workspace\PMT-BRIDGE\PMT-BRIDGE.iml" />
-      <module fileurl="file://C:\Android-Workspace-18-09-2017\PMT-BRIDGE\PMT-BRIDGE.iml" filepath="C:\Android-Workspace-18-09-2017\PMT-BRIDGE\PMT-BRIDGE.iml" />
       <module fileurl="file://D:\thaher\AndroidWorkSpace\PMT-BRIDGE\.idea\PMT-BRIDGE.iml" filepath="D:\thaher\AndroidWorkSpace\PMT-BRIDGE\.idea\PMT-BRIDGE.iml" />
       <module fileurl="file://C:\PMT-BRIDGE\PMT-BRIDGE.iml" filepath="C:\PMT-BRIDGE\PMT-BRIDGE.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://C:\Android-Studio-Workspace\PMT-BRIDGE\app\app.iml" filepath="C:\Android-Studio-Workspace\PMT-BRIDGE\app\app.iml" />
-      <module fileurl="file://C:\Android-Workspace-18-09-2017\PMT-BRIDGE\app\app.iml" filepath="C:\Android-Workspace-18-09-2017\PMT-BRIDGE\app\app.iml" />
     </modules>
   </component>
 </project>
