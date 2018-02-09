@@ -122,7 +122,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
         if (ConnectivityReceiver.isConnected()) {
 
-            getWeeklyHourReport();
+            getWeeklyHourReport(false);
         } else {
             Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
 
@@ -199,32 +199,45 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                 Date current = null;
                 Date clciked = null;
                 try {
-                     current = df.parse(formattedDate);
+                    current = df.parse(formattedDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
                 try {
-                    clciked = df.parse( weekReport.get(pos - 2).getDate());
+
+                    if (weekReport.size() > 0) {
+
+                        clciked = df.parse(weekReport.get(pos - 2).getDate());
+
+
+                    }
+
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
-                Log.i("ADDDDDD"," formattedDate "+formattedDate+" week "+ weekReport.get(pos - 2).getDate());
-
-                assert current != null;
-                if (current.compareTo(clciked) >= 0)
+                Log.i("ADDDDDD", " formattedDate " + formattedDate + " week " + weekReport.get(pos - 2).getDate());
+                if (!(clciked == null))
                 {
-                   // cuurent is after or on clicked
-                                    popIt(new HourDetail());
+                {
+                    assert current != null;
+                    if (current.compareTo(clciked) >= 0) {
+                        // cuurent is after or on clicked
+                        popIt(new HourDetail());
 //                    Toast.makeText(getActivity(), "Good", Toast.LENGTH_LONG).show();
 
 
+                    } else {
+                        Toast.makeText(getActivity(), "You cannot enter data for future dates", Toast.LENGTH_LONG).show();
+
+                    }
                 }
-                else {
-                    Toast.makeText(getActivity(), "You cannot enter data for future dates", Toast.LENGTH_LONG).show();
+            }
+            else{
+                   Toast.makeText(getActivity(), "Please refresh the list!", Toast.LENGTH_LONG).show();
 
                 }
-
 
             }
         });
@@ -366,7 +379,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
     }
 
 
-    private void getWeeklyHourReport() {
+    private void getWeeklyHourReport(final boolean isadd) {
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please Wait...");
@@ -407,6 +420,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
                     adapter.notifyDataSetChanged();
                     recyclerView.scrollToPosition(currenthourDetails.size());
+                   if(isadd){ CoachSwipe();}
 
                     Log.i("ADAPTERADD ", "1");
 
@@ -683,9 +697,8 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                     if (ConnectivityReceiver.isConnected()) {
 
                         getProject_ActivityList();
-                        getWeeklyHourReport();
+                        getWeeklyHourReport(true);
                         popupWindow.dismiss();
-                        CoachSwipe();
 
                     } else {
                         Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
@@ -753,7 +766,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
                         //Refreshing the Project,Activity and Hour Report Lists
                         getProject_ActivityList();
-                        getWeeklyHourReport();
+                        getWeeklyHourReport(false);
                         popupWindow.dismiss();
 
 

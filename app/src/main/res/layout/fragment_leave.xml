@@ -16,7 +16,7 @@
 
     <TextView
         android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/imghpy"
+        android:layout_below="@id/imghpy"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:text="We are working on it!"

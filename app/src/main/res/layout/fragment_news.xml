@@ -8,18 +8,16 @@
         android:id="@+id/img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:padding="32dp"
         android:src="@drawable/emptynews" />
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/img"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="85dp"
+        android:layout_below="@id/img"
         android:text="You don't have any news yet!"
         android:textColor="@android:color/white"
         android:textStyle="bold" />

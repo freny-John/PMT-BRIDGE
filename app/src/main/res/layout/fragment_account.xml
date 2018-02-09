@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignBottom="@+id/imageView"
+        android:layout_below="@id/imageView"
         android:layout_centerHorizontal="true"
         android:text="Our service monkeys are on the way!"
         android:textColor="@android:color/white"

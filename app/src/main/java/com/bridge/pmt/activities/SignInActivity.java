@@ -84,7 +84,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     if(ValidationManager.isValidPassword(password)){
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Signing Up...");
+        progressDialog.setMessage("Signing In...");
         progressDialog.setCancelable(false);
 
         progressDialog.show();
