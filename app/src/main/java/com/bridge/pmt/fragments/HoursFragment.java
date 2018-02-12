@@ -35,6 +35,7 @@ import com.bridge.pmt.helpers.ConnectivityReceiver;
 import com.bridge.pmt.helpers.DecimalPicker;
 import com.bridge.pmt.helpers.RecyclerItemTouchHelper;
 import com.bridge.pmt.helpers.SharedPrefManager;
+import com.bridge.pmt.helpers.Utilities;
 import com.bridge.pmt.models.Activity;
 import com.bridge.pmt.models.BaseResponse;
 import com.bridge.pmt.models.HourDetail;
@@ -78,6 +79,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
     private HoursAdapter adapter;
     private List<WeekReport> weekReport;
     private List<HourDetail> currenthourDetails;
+    Utilities utilities;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +95,6 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         }
 
 
-
     }
 
 
@@ -103,7 +104,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         rootView = inflater.inflate(R.layout.fragment_hours, container, false);
         createUI(rootView);
         getActivity().setTitle("Hours");
-
+        utilities = new Utilities(getActivity());
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
         userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID, 0);
@@ -115,21 +116,13 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-
-
-
-
-
         if (ConnectivityReceiver.isConnected()) {
 
-            getWeeklyHourReport(false);
+            getWeeklyHourReport(false, false);
         } else {
             Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
 
         }
-
-
-
 
 
         Log.i("SPDATA", "projectList " + projectList.size() + " reactivityList " + activityList.size());
@@ -172,19 +165,21 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 //                Log.i("DATEASSAS" ,weekReport.get(position+2).getDate().trim());
 //                Log.i("DATEASSAS" ,DateFormat.format("yyyy-mm-dd",date).toString());
                 currenthourDetails.clear();
-               if(weekReport.size()>0) { if (position <= 8 && position >= 2) {
-                    currenthourDetails.addAll(weekReport.get(position - 2).getHourDetails());
-                }
-                adapter.notifyDataSetChanged();
-                Log.i("ADAPTERADD ", "12323");
+                if (weekReport.size() > 0) {
+                    if (position <= 8 && position >= 2) {
+                        currenthourDetails.addAll(weekReport.get(position - 2).getHourDetails());
+                    }
+                    adapter.notifyDataSetChanged();
+                    Log.i("ADAPTERADD ", "12323");
 
-                if (currenthourDetails.size() > 0) {
-                    empty.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                } else {
-                    empty.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }}
+                    if (currenthourDetails.size() > 0) {
+                        empty.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        empty.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }
+                }
 
             }
         });
@@ -218,24 +213,22 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                 }
 
                 Log.i("ADDDDDD", " formattedDate " + formattedDate + " week " + weekReport.get(pos - 2).getDate());
-                if (!(clciked == null))
-                {
-                {
-                    assert current != null;
-                    if (current.compareTo(clciked) >= 0) {
-                        // cuurent is after or on clicked
-                        popIt(new HourDetail());
+                if (!(clciked == null)) {
+                    {
+                        assert current != null;
+                        if (current.compareTo(clciked) >= 0) {
+                            // cuurent is after or on clicked
+                            popIt(new HourDetail());
 //                    Toast.makeText(getActivity(), "Good", Toast.LENGTH_LONG).show();
 
 
-                    } else {
-                        Toast.makeText(getActivity(), "You cannot enter data for future dates", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getActivity(), "You cannot enter data for future dates", Toast.LENGTH_LONG).show();
 
+                        }
                     }
-                }
-            }
-            else{
-                   Toast.makeText(getActivity(), "Please refresh the list!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "Please refresh the list!", Toast.LENGTH_LONG).show();
 
                 }
 
@@ -370,7 +363,6 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
     }
 
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -378,14 +370,12 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
     }
 
+//
+    private void getWeeklyHourReport(final boolean isadd, final boolean isupdate) {
+        if (!isadd && !isupdate) {
+            utilities.showLoadingDialog("Please wait ...");
 
-    private void getWeeklyHourReport(final boolean isadd) {
-
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Please Wait...");
-        progressDialog.setCancelable(false);
-
-        progressDialog.show();
+        }
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -403,12 +393,26 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         call.enqueue(new Callback<BaseResponse>() {
             @Override
             public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                progressDialog.dismiss();
+                utilities.dismissLoadingDialog();
+
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+
+
+                if (isadd) {
+                    Toast.makeText(getActivity(), "Report Created Successfully", Toast.LENGTH_LONG).show();
+                }
+
+                if (isupdate) {
+                    Toast.makeText(getActivity(), "Report Updated Successfully", Toast.LENGTH_LONG).show();
+                }
+
 
 //                Log.v("SERVER-RESPONSE", String.valueOf(response.body().getToken() ));
 
-                Log.e("SERVER-RESPONSE-data", String.valueOf((response.body())));
-                Log.e("SERVER-RESPONSE-data", String.valueOf((response.body().getData().getWeekReport())));
+//                Log.e("SERVER-RESPONSE-data", String.valueOf((response.body())));
+//                Log.e("SERVER-RESPONSE-data", String.valueOf((response.body().getData().getWeekReport())));
 //                Toast.makeText(getApplicationContext(),response.body().getToken()  , Toast.LENGTH_LONG).show();
                 if (response.body().getStatus().equals(1)) {
                     weekReport = response.body().getData().getWeekReport();
@@ -420,7 +424,9 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
                     adapter.notifyDataSetChanged();
                     recyclerView.scrollToPosition(currenthourDetails.size());
-                   if(isadd){ CoachSwipe();}
+                    if (isadd) {
+                        CoachSwipe();
+                    }
 
                     Log.i("ADAPTERADD ", "1");
 
@@ -446,9 +452,9 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
             @Override
             public void onFailure(Call<BaseResponse> call, Throwable t) {
-                progressDialog.dismiss();
+                utilities.dismissLoadingDialog();
 
-           Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -457,7 +463,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
     public void onButtonShowPopupWindowClick(final HourDetail hourDetail, final String datedate, final Integer position) {
 
-       // get a reference to the already created main layout
+        // get a reference to the already created main layout
 
         // inflate the layout of the popup window
         inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -635,27 +641,28 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
     }
 
 
-
     public void popIt(final HourDetail hourDetail) {
-        if(popupWindow==null||!popupWindow.isShowing()){
-            if(weekReport.size()>0) {
-           final int pos = horizontalCalendar.getSelectedDatePosition();
-        if (pos <= 8 && pos >= 2) {
+        if (popupWindow == null || !popupWindow.isShowing()) {
+            if (weekReport.size() > 0) {
+                final int pos = horizontalCalendar.getSelectedDatePosition();
+                if (pos <= 8 && pos >= 2) {
 //            Toast.makeText(getActivity(), "Position : " + pos + " Date :" + weekReport.get(pos - 2).getDate(), Toast.LENGTH_LONG).show();
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    onButtonShowPopupWindowClick(hourDetail, weekReport.get(pos - 2).getDate(), pos);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onButtonShowPopupWindowClick(hourDetail, weekReport.get(pos - 2).getDate(), pos);
+
+                        }
+                    });
 
                 }
-            });
+            } else {
+                Log.i("POPIT", "No Value");
 
-        }}else{
-           Log.i("POPIT","No Value");
+                Toast.makeText(getActivity(), "Please Refresh the hour list", Toast.LENGTH_LONG).show();
 
-           Toast.makeText(getActivity(), "Please Refresh the hour list", Toast.LENGTH_LONG).show();
-
-       }}
+            }
+        }
     }
 
 //Web service to Add the hour report
@@ -663,11 +670,8 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
     private void addHourReport(HourDetail hourDetail, Integer position) {
 
         String date = weekReport.get(position - 2).getDate();
+        utilities.showLoadingDialog("Adding ...");
 
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Adding ...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
 
         Log.e("ADDING ", " REPORT "
                 + token + " " + "User Id:" + userId + " ACTIVITY " + hourDetail.getActivity() + " getHours " + hourDetail.getHours() + " getProjId " + hourDetail.getProjId() + " datedate " + date + " Description " + hourDetail.getDescription());
@@ -683,7 +687,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         call.enqueue(new Callback<BaseResponse>() {
             @Override
             public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
 
                 Log.e("RESPONSE-ADD REPORT", String.valueOf((response.body())));
 
@@ -692,13 +696,14 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                 if (response.body().getStatus().equals(1)) {
 
                     //Refreshing the Project,Activity and Hour Report Lists
-
+                    //Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_LONG).show();
 
                     if (ConnectivityReceiver.isConnected()) {
 
                         getProject_ActivityList();
-                        getWeeklyHourReport(true);
-                        popupWindow.dismiss();
+                        getWeeklyHourReport(true, false);
+
+                        // popupWindow.dismiss();
 
                     } else {
                         Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
@@ -706,14 +711,12 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                     }
 
 
-
-
                 }
             }
 
             @Override
             public void onFailure(Call<BaseResponse> call, Throwable t) {
-                progressDialog.dismiss();
+                utilities.dismissLoadingDialog();
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
 
                 Log.e(" ON failure", t.getMessage());
@@ -729,11 +732,8 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
     private void updateHourReport(HourDetail hourDetail) {
 
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Updating ...");
-        progressDialog.setCancelable(false);
 
-        progressDialog.show();
+        utilities.showLoadingDialog("Updating ...");
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -742,7 +742,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                 .build();
 
         APIService service = retrofit.create(APIService.class);
-        Log.i("CHECVBOX"," VAL CALL:  "+hourDetail.getExtraWork());
+        Log.i("CHECVBOX", " VAL CALL:  " + hourDetail.getExtraWork());
 
 
         Call<BaseResponse> call = service.updateHourReport(token, hourDetail.getPdate(), hourDetail.getHours(), hourDetail.getProjId(), hourDetail.getActivity(), hourDetail.getDescription(), hourDetail.getExtraWork(), hourDetail.getId());
@@ -750,7 +750,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         call.enqueue(new Callback<BaseResponse>() {
             @Override
             public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
 
 
                 Log.e("RESPONSE-data", String.valueOf((response.body())));
@@ -760,22 +760,21 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                 if (response.body().getStatus().equals(1)) {
 
 
-
+                  //  Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_LONG).show();
 
                     if (ConnectivityReceiver.isConnected()) {
 
                         //Refreshing the Project,Activity and Hour Report Lists
                         getProject_ActivityList();
-                        getWeeklyHourReport(false);
-                        popupWindow.dismiss();
+                        getWeeklyHourReport(false, true);
+
+                        //  popupWindow.dismiss();
 
 
                     } else {
                         Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
 
                     }
-
-
 
 
                 }
@@ -785,7 +784,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
             @Override
             public void onFailure(Call<BaseResponse> call, Throwable t) {
-                progressDialog.dismiss();
+                utilities.dismissLoadingDialog();
 
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
 
@@ -815,8 +814,9 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
         APIService service = retrofit.create(APIService.class);
 
 
-
         Call<BaseResponse> call = service.deleteHourReport(token, hourDetail.getId());
+
+        Log.e("RESPONSE-Delete", String.valueOf(token + "IDE:" + hourDetail.getId()));
 
         call.enqueue(new Callback<BaseResponse>() {
             @Override
@@ -824,12 +824,17 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                 progressDialog.dismiss();
 
 
-                Log.e("RESPONSE-data", String.valueOf((response.body())));
+                Log.e("RESPONSE-Error", String.valueOf((response.errorBody())));
+                Log.e("RESPONSE-Delete-body", String.valueOf((response.body())));
 
 //                Toast.makeText(getActivity(),response.body().getMessage()  , Toast.LENGTH_LONG).show();
 
                 if (response.body().getStatus().equals(1)) {
 
+                    Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -840,7 +845,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
-           });
+        });
 
 
     }
@@ -876,7 +881,7 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
 
                     if (ConnectivityReceiver.isConnected()) {
                         Log.e("REPOT ID", String.valueOf(((HoursAdapter.ViewHolder0) viewHolder).hourDetail.getId()));
-                   deleteHourReport(((HoursAdapter.ViewHolder0) viewHolder).hourDetail);
+                        deleteHourReport(((HoursAdapter.ViewHolder0) viewHolder).hourDetail);
 
                     } else {
                         Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
@@ -898,54 +903,47 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
             });
 
 
-
             alertDialog.show();
-
-
-
-
-
-
-
 
 
         }
     }
 
 
-       public void  CoachAdd(){
-            new SpotlightView.Builder(getActivity())
-                    .introAnimationDuration(400)
+    public void CoachAdd() {
+        new SpotlightView.Builder(getActivity())
+                .introAnimationDuration(400)
 //                            .enableRevealAnimation(isRevealEnabled)
-                    .performClick(true)
-                    .fadeinTextDuration(400)
-                    .headingTvColor(Color.parseColor("#66639E"))
-                    .headingTvSize(32)
-                    .headingTvText("Add New Report")
-                    .subHeadingTvColor(Color.parseColor("#958CC8"))
-                    .subHeadingTvSize(16)
-                    .subHeadingTvText("Wanna add today's hour report?\nClick on the add icon.")
-                    .maskColor(Color.parseColor("#dc000000"))
-                    .target(btn)
-                    .lineAnimDuration(400)
-                    .lineAndArcColor(Color.parseColor("#4bd7bf"))
-                    .dismissOnTouch(true)
-                    .dismissOnBackPress(true)
-                    .enableDismissAfterShown(true)
-                            .usageId("add") //UNIQUE ID
-                    .show();
-        }
+                .performClick(true)
+                .fadeinTextDuration(400)
+                .headingTvColor(Color.parseColor("#66639E"))
+                .headingTvSize(32)
+                .headingTvText("Add New Report")
+                .subHeadingTvColor(Color.parseColor("#958CC8"))
+                .subHeadingTvSize(16)
+                .subHeadingTvText("Wanna add today's hour report?\nClick on the add icon.")
+                .maskColor(Color.parseColor("#dc000000"))
+                .target(btn)
+                .lineAnimDuration(400)
+                .lineAndArcColor(Color.parseColor("#4bd7bf"))
+                .dismissOnTouch(true)
+                .dismissOnBackPress(true)
+                .enableDismissAfterShown(true)
+                .usageId("add") //UNIQUE ID
+                .show();
+    }
 
 
-        public void CoachSwipe(){
+    public void CoachSwipe() {
 
-           if(SharedPrefManager.getInstance(getActivity()).isFirsttime())
-           {  TutoShowcase.from((MainActivity)getActivity())
-                       .setContentView(R.layout.tuto_sample)
-                   .setFitsSystemWindows(true)
+        if (SharedPrefManager.getInstance(getActivity()).isFirsttime()) {
+            TutoShowcase.from((MainActivity) getActivity())
+                    .setContentView(R.layout.tuto_sample)
+                    .setFitsSystemWindows(true)
                     .on(R.id.activity_main)
                     .displaySwipableLeft()
                     .duration(300)
-                    .show();}
+                    .show();
         }
+    }
 }

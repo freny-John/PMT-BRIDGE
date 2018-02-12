@@ -9,17 +9,17 @@ import com.bridge.pmt.MainActivity;
 import com.bridge.pmt.R;
 
 
-public class SplashActivity extends AppCompatActivity{
+public class SplashActivity extends AppCompatActivity {
 
 
     // SplashActivity screen timer
     private static int SPLASH_TIME_OUT = 1500;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_splash_screen);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash_screen);
         getSupportActionBar().hide();
 
         new Handler().postDelayed(new Runnable() {
@@ -33,7 +33,7 @@ public class SplashActivity extends AppCompatActivity{
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-               // Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                // Intent i = new Intent(SplashActivity.this, MainActivity.class);
                 Intent i = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(i);
 
@@ -41,15 +41,15 @@ public class SplashActivity extends AppCompatActivity{
                 finish();
             }
         }, SPLASH_TIME_OUT);
-	}
+    }
 
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		//ourSong.release();
-		finish();
-	}
-	
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        //ourSong.release();
+        finish();
+    }
+
 
 }

@@ -19,7 +19,6 @@ public interface APIService {
     );
 
 
-
     @FormUrlEncoded
     @POST("api/v5/getHourReportWeekly")
     Call<BaseResponse> getWeekReport(
@@ -27,7 +26,6 @@ public interface APIService {
 
             @Field("id") int id
     );
-
 
 
     @POST("api/v5/activity")
@@ -82,7 +80,6 @@ public interface APIService {
 
             @Field("report_id") int report_id
     );
-
 
 
 }

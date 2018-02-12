@@ -38,6 +38,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private Button buttonSignIn;
     TextView title;
     ActionBar ab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,76 +80,70 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         String password = editTextPassword.getText().toString().trim();
 
 
-        if(ValidationManager.isValidEmail(email)){
+        if (ValidationManager.isValidEmail(email)) {
 
-    if(ValidationManager.isValidPassword(password)){
+            if (ValidationManager.isValidPassword(password)) {
 
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Signing In...");
-        progressDialog.setCancelable(false);
+                final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage("Signing In...");
+                progressDialog.setCancelable(false);
 
-        progressDialog.show();
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIUrl.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        APIService service = retrofit.create(APIService.class);
+                progressDialog.show();
 
 
-        Call<BaseResponse> call = service.userLogin(email, password);
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(APIUrl.BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
-        call.enqueue(new Callback<BaseResponse>() {
-            @Override
-            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                progressDialog.dismiss();
+                APIService service = retrofit.create(APIService.class);
+
+
+                Call<BaseResponse> call = service.userLogin(email, password);
+
+                call.enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        progressDialog.dismiss();
 
 //                Log.v("SERVER-RESPONSE", String.valueOf(response.body().getToken() ));
 
-             Log.e("SERVER-RESPONSE-data", String.valueOf((response.body() )));
+                        Log.e("SERVER-RESPONSE-data", String.valueOf((response.body())));
 //                Toast.makeText(getApplicationContext(),response.body().getToken()  , Toast.LENGTH_LONG).show();
 
-                if ( String.valueOf(response.body().getStatus() ).equals("1")) {
+                        if (String.valueOf(response.body().getStatus()).equals("1")) {
 
 //                if(response.body().getData().getUser().getActiveUser()==1&&response.body().getData().getUser().getRoleId()==0)
 //                {
-                    SharedPrefManager.getInstance(getApplicationContext()).userDetails(response.body().getData().getUser());
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            SharedPrefManager.getInstance(getApplicationContext()).userDetails(response.body().getData().getUser());
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
-                  finish();
+                            finish();
 //                }else {
 //                    Toast.makeText(getApplicationContext(), "You are not authorised to use this app!", Toast.LENGTH_LONG).show();
 //
 //                }
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "User Not Found!", Toast.LENGTH_LONG).show();
-                }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "User Not Found!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+            } else {
+                Toast.makeText(getApplicationContext(), "Enter a valid password", Toast.LENGTH_LONG).show();
+
             }
 
-
-
-            @Override
-            public void onFailure(Call<BaseResponse> call, Throwable t) {
-                progressDialog.dismiss();
-                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-
-
-    }
-else{
-        Toast.makeText(getApplicationContext(), "Enter a valid password", Toast.LENGTH_LONG).show();
-
-    }
-
-}
-
-    else{
+        } else {
             Toast.makeText(getApplicationContext(), "Enter a valid Email", Toast.LENGTH_LONG).show();
 
         }
@@ -166,8 +161,6 @@ else{
                 Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
 
             }
-
-
 
 
         }

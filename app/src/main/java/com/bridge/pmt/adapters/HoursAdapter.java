@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bridge.pmt.R;
 import com.bridge.pmt.fragments.HoursFragment;
@@ -35,9 +34,9 @@ public class HoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        switch (viewType)
-        {
-            case 1:      {    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hours, parent, false);
+        switch (viewType) {
+            case 1: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hours, parent, false);
                 return new ViewHolder0(view);
             }
             case 2:
@@ -53,45 +52,44 @@ public class HoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        Log.i("PODSITI"," position " +position);
+        Log.i("PODSITI", " position " + position);
         switch (holder.getItemViewType()) {
             case 1:
-                final ViewHolder0 viewHolder0 = (ViewHolder0)holder;
-                viewHolder0.hourDetail =mHourmodels.get(position);
+                final ViewHolder0 viewHolder0 = (ViewHolder0) holder;
+                viewHolder0.hourDetail = mHourmodels.get(position);
                 viewHolder0.time.setText(String.valueOf(viewHolder0.hourDetail.getHours()));
                 viewHolder0.descrp.setText(viewHolder0.hourDetail.getDescription());
                 viewHolder0.activty.setText(viewHolder0.hourDetail.getActivity());
                 viewHolder0.relloy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context,"Work in progress" , Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context,"Work in progress" , Toast.LENGTH_LONG).show();
 
                         hoursCalendarFragment.popIt(viewHolder0.hourDetail);
 
                     }
                 });
-                if(viewHolder0.hourDetail.getExtraWork()==0)
-                {
+                if (viewHolder0.hourDetail.getExtraWork() == 0) {
                     viewHolder0.extra.setVisibility(View.INVISIBLE);
-                }
-                else {
+                } else {
                     viewHolder0.extra.setVisibility(View.VISIBLE);
 
-                }                break;
+                }
+                break;
 
             case 2:
-                ViewHolder2 viewHolder2 = (ViewHolder2)holder;
+                ViewHolder2 viewHolder2 = (ViewHolder2) holder;
                 break;
         }
 
 
-
     }
+
     @Override
     public int getItemViewType(int position) {
         // Just as an example, return 0 or 2 depending on position
         // Note that unlike in ListView adapters, types don't have to be contiguous
-        if(position<mHourmodels.size())
+        if (position < mHourmodels.size())
             return 1;
         else
             return 2;
@@ -99,7 +97,7 @@ public class HoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mHourmodels.size()+1;
+        return mHourmodels.size() + 1;
     }
 
     public void removeItem(int position) {
@@ -138,6 +136,7 @@ public class HoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
     }
+
     public class ViewHolder2 extends RecyclerView.ViewHolder {
 
 
