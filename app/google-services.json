@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "133732134825",
+    "firebase_url": "https://pmt-bridge.firebaseio.com",
+    "project_id": "pmt-bridge",
+    "storage_bucket": "pmt-bridge.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133732134825:android:6ecf82c74e81acec",
+        "android_client_info": {
+          "package_name": "com.bridge.pmt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133732134825-n9g11rrcpa6k61hisf68151dqm97sfru.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bridge.pmt",
+            "certificate_hash": "8720ee0ec8ce1112ad66a9ffdfdc4d7ae91a069b"
+          }
+        },
+        {
+          "client_id": "133732134825-09vul1q2q3na2doqhbv0vqjh12dp0mim.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMu4FAn0CLD1FQFuAvg3UDSEqi5e1soKI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133732134825-09vul1q2q3na2doqhbv0vqjh12dp0mim.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

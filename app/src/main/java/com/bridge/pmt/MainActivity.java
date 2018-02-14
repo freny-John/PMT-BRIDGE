@@ -26,12 +26,13 @@ import android.widget.Toast;
 import com.bridge.pmt.activities.SignInActivity;
 import com.bridge.pmt.api.APIService;
 import com.bridge.pmt.api.APIUrl;
+import com.bridge.pmt.fragments.AccountFragment;
 import com.bridge.pmt.fragments.HoursFragment;
 import com.bridge.pmt.fragments.LeaveFragment;
 import com.bridge.pmt.fragments.NewsFragment;
-import com.bridge.pmt.fragments.AccountFragment;
 import com.bridge.pmt.helpers.ConnectivityReceiver;
 import com.bridge.pmt.helpers.SharedPrefManager;
+import com.bridge.pmt.helpers.Utilities;
 import com.bridge.pmt.models.Activity;
 import com.bridge.pmt.models.BaseResponse;
 
@@ -47,7 +48,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-
 public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     private TextView mTextMessage;
@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     ActionBar ab;
     FloatingActionButton add_reg;
     FloatingActionButton logout;
+
+    Utilities utilities;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -64,12 +66,17 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         getSupportActionBar().setElevation(0);
 
         ab = getSupportActionBar();
+
+        utilities = new Utilities(this);
+
         // Create a TextView programmatically.
         title = new TextView(getApplicationContext());
+
         // Create a LayoutParams for TextView
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT, // Width of TextView
                 RelativeLayout.LayoutParams.WRAP_CONTENT); // Height of TextView
+
         // Apply the layout parameters to TextView widget
         title.setLayoutParams(lp);
         // Set text to display in TextView
@@ -83,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         // Finally, set the newly created TextView as ActionBar custom view
         ab.setCustomView(title);
-
-
 
         //Folding Tab Bar
         FoldingTabBar tabBar = (FoldingTabBar) findViewById(R.id.folding_tab_bar);
@@ -157,9 +162,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 //        }
 
 
-
         //loading home fragment by default
-       // displaySelectedScreen(R.id.nav_news);
+        // displaySelectedScreen(R.id.nav_news);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         if (sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null) != null) {
@@ -170,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 //            txtUserEmail.setText( sharedPreferences.getString(SharedPrefManager.KEY_EMAIL, null));
 
 
-          //  Toast.makeText(getApplicationContext(), sharedPreferences.getString(SharedPrefManager.KEY_USER_NAME, null), Toast.LENGTH_LONG).show();
+            //  Toast.makeText(getApplicationContext(), sharedPreferences.getString(SharedPrefManager.KEY_USER_NAME, null), Toast.LENGTH_LONG).show();
         }
         if (!SharedPrefManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(this, SignInActivity.class));
@@ -180,13 +184,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     }
 
 
-//Pick fragment for each screens
+    //Pick fragment for each screens
     private void changeFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
-
-
-
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -199,7 +200,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             return true;
         }
     };
-
 
 
 //    @Override
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
             case R.id.nav_leave:
                 fragment = new LeaveFragment();
-                           break;
+                break;
 
             case R.id.nav_account:
 
@@ -255,14 +255,14 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
                 break;
 
-               // logout();
+            // logout();
 
         }
 
         //replacing the fragment
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-           // ft.replace(R.id.content_frame, fragment);
+            // ft.replace(R.id.content_frame, fragment);
             ft.commit();
         }
 
@@ -280,15 +280,13 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     protected void onStart() {
         super.onStart();
 
-       if(ConnectivityReceiver.isConnected()) {
-           getProject_Activity_List();
+        if (ConnectivityReceiver.isConnected()) {
+            getProject_Activity_List();
+        } else {
+            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+
+        }
     }
-else{
-           Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
-
-       }}
-
-
 
 
     private void getProject_Activity_List()
@@ -297,14 +295,13 @@ else{
         //Geting the user token from sharedpreference
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SharedPrefManager.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(SharedPrefManager.KEY_USER_TOKEN, null);
-        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID,0);
+        int userId = sharedPreferences.getInt(SharedPrefManager.KEY_USER_ID, 0);
 
         if (token != null) {
+
+
             //Web service to get the activity list
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Geting Activities...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+         utilities.showLoadingDialog("Geting Activities...");
 
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -317,79 +314,65 @@ else{
             call.enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                    progressDialog.dismiss();
+                    utilities.dismissLoadingDialog();
 
-                    Log.e("SERVER_RESPONSE_data","ACTIVTY :"+ String.valueOf((response.body().getData().getActivity() )));
+                    if (response.body() != null) {
+                        Log.e("SERVER_RESPONSE_data", "ACTIVTY :" + String.valueOf((response.body().getData().getActivity())));
+                        List<Activity> activityList = response.body().getData().getActivity();
 
-                    List <Activity> activityList=response.body().getData().getActivity();
+                        // activity list to sharedpreferences
+                        SharedPrefManager.getInstance(getApplicationContext()).pushactivityList(activityList);
+                        Log.e("ACTIVITY_LIST ", String.valueOf(activityList));
 
-                    // activity list to sharedpreferences
-                    SharedPrefManager.getInstance(getApplicationContext()).pushactivityList(activityList);
+                        // get activitylist from sharedpreferences
+                        Log.e("SP_LIST ", String.valueOf(SharedPrefManager.getInstance(getApplicationContext()).pullactivityList()));
 
-                    Log.e("ACTIVITY_LIST ", String.valueOf(activityList ));
+                    } else
 
-                    // get activitylist from sharedpreferences
-                    Log.e("SP_LIST ", String.valueOf(         SharedPrefManager.getInstance(getApplicationContext()).pullactivityList() ));
-                    //Toast.makeText(getApplicationContext(), ""+ response.body().getData().getActivity(), Toast.LENGTH_LONG).show();
-
-                    if ( String.valueOf(response.body().getStatus() ).equals("1")) {
-
-
-//                        SharedPrefManager.getInstance(getApplicationContext()).userActivity(response.body().getData().getUser());
-//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//
-//                        finish();
-
-                    } else {
-//                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+                    {
+                        Toast.makeText(getApplicationContext(), "Server not responding, please try again later", Toast.LENGTH_LONG).show();
+                        utilities.dismissLoadingDialog();
                     }
+
                 }
-
-
 
                 @Override
                 public void onFailure(Call<BaseResponse> call, Throwable t) {
-                    progressDialog.dismiss();
+                    utilities.dismissLoadingDialog();
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
-            call = service.getUserProjects(token,userId);
+            call = service.getUserProjects(token, userId);
             call.enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                    progressDialog.dismiss();
+                    utilities.dismissLoadingDialog();
 
-                    Log.e("SERVER_RESPONSE_data", "pROJECT LIST "+String.valueOf((response.body().getData().getProjectList() )));
+                    if (response.body() != null)
 
-                    List projectList=response.body().getData().getProjectList();
+                    {
+                        Log.e("SERVER_RESPONSE_data", "pROJECT LIST " + String.valueOf((response.body().getData().getProjectList())));
 
-                    // activity list to sharedpreferences
-                    SharedPrefManager.getInstance(getApplicationContext()).pushprojectList(projectList);
+                        List projectList = response.body().getData().getProjectList();
 
-                    Log.e("PROJECT_LIST ", String.valueOf(projectList ));
+                        // activity list to sharedpreferences
+                        SharedPrefManager.getInstance(getApplicationContext()).pushprojectList(projectList);
+                        Log.e("PROJECT_LIST ", String.valueOf(projectList));
 
-                    // get activitylist from sharedpreferences
-                    Log.e("SP_LIST ", String.valueOf(         SharedPrefManager.getInstance(getApplicationContext()).pullactivityList() ));
-                    // Toast.makeText(getApplicationContext(), ""+ response.body().getData().getProjectList(), Toast.LENGTH_LONG).show();
+                        // get activitylist from sharedpreferences
+                        Log.e("SP_LIST ", String.valueOf(SharedPrefManager.getInstance(getApplicationContext()).pullactivityList()));
 
-                    if ( String.valueOf(response.body().getStatus() ).equals("1")) {
+                    } else
 
-
-//                        SharedPrefManager.getInstance(getApplicationContext()).userActivity(response.body().getData().getUser());
-//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//
-//                        finish();
-
-                    } else {
-//                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+                    {
+                        Toast.makeText(getApplicationContext(), "Server not responding, please try again later", Toast.LENGTH_LONG).show();
+                        utilities.dismissLoadingDialog();
                     }
                 }
 
-
-
                 @Override
                 public void onFailure(Call<BaseResponse> call, Throwable t) {
-                    progressDialog.dismiss();
+                    utilities.dismissLoadingDialog();
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
@@ -401,7 +384,6 @@ else{
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
-
 
 
     }

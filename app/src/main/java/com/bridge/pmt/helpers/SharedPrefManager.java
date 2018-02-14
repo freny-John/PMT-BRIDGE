@@ -129,6 +129,8 @@ public class SharedPrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
+        Toast.makeText(mCtx,   "Loged out Successfully", Toast.LENGTH_LONG).show();
+
         return true;
     }
 

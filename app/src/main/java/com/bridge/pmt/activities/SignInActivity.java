@@ -1,5 +1,6 @@
 package com.bridge.pmt.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,8 +8,12 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,6 +43,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private Button buttonSignIn;
     TextView title;
     ActionBar ab;
+    TextView disclaimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +73,55 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        disclaimer = (TextView) findViewById(R.id.disclaimer);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
 
         buttonSignIn.setOnClickListener(this);
+
+
+        disclaimer.setMovementMethod(LinkMovementMethod.getInstance());
+        disclaimer.setText("View our terms", TextView.BufferType.SPANNABLE);
+        Spannable mySpannable = (Spannable)disclaimer.getText();
+        ClickableSpan myClickableSpan = new ClickableSpan()
+        {
+            @Override
+            public void onClick(View widget) {
+
+showDisc();
+            }
+        };
+        mySpannable.setSpan(myClickableSpan, 0, disclaimer.getText().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    private void showDisc() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SignInActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_dialog_desc, null);
+        alertDialogBuilder.setView(dialogView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        final Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+        final TextView title = (TextView) dialogView.findViewById(R.id.diatitle);
+        final TextView msg = (TextView) dialogView.findViewById(R.id.textdialog);
+        title.setText("Disclaimer Info");
+        msg.setText("This app is intended only for active Developers, Designers and Testers of Bridge Global.");
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+
+
+            }
+        });
+
+
+
+        alertDialog.show();
+
     }
 
     private void userSignIn() {
@@ -106,29 +156,23 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                         progressDialog.dismiss();
 
-//                Log.v("SERVER-RESPONSE", String.valueOf(response.body().getToken() ));
 
                         Log.e("SERVER-RESPONSE-data", String.valueOf((response.body())));
-//                Toast.makeText(getApplicationContext(),response.body().getToken()  , Toast.LENGTH_LONG).show();
+                        if (response.body() != null) {
+                            if (String.valueOf(response.body().getStatus()).equals("1")) {
+                                SharedPrefManager.getInstance(getApplicationContext()).userDetails(response.body().getData().getUser());
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                finish();
 
-                        if (String.valueOf(response.body().getStatus()).equals("1")) {
-
-//                if(response.body().getData().getUser().getActiveUser()==1&&response.body().getData().getUser().getRoleId()==0)
-//                {
-                            SharedPrefManager.getInstance(getApplicationContext()).userDetails(response.body().getData().getUser());
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
-                            finish();
-//                }else {
-//                    Toast.makeText(getApplicationContext(), "You are not authorised to use this app!", Toast.LENGTH_LONG).show();
-//
-//                }
-
+                            } else {
+                                Toast.makeText(getApplicationContext(), "User Not Found!", Toast.LENGTH_LONG).show();
+                            }
                         } else {
-                            Toast.makeText(getApplicationContext(), "User Not Found!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Server not responding, please try again later", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
                         }
-                    }
 
+                    }
 
                     @Override
                     public void onFailure(Call<BaseResponse> call, Throwable t) {
@@ -136,7 +180,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-
 
             } else {
                 Toast.makeText(getApplicationContext(), "Enter a valid password", Toast.LENGTH_LONG).show();
@@ -161,7 +204,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
 
             }
-
 
         }
     }
