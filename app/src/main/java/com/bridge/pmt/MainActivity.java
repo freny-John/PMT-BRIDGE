@@ -35,6 +35,7 @@ import com.bridge.pmt.helpers.SharedPrefManager;
 import com.bridge.pmt.helpers.Utilities;
 import com.bridge.pmt.models.Activity;
 import com.bridge.pmt.models.BaseResponse;
+import com.bridge.pmt.models.ProjectList;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -353,7 +354,15 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                     {
                         Log.e("SERVER_RESPONSE_data", "pROJECT LIST " + String.valueOf((response.body().getData().getProjectList())));
 
-                        List projectList = response.body().getData().getProjectList();
+                        List<ProjectList> projectList = response.body().getData().getProjectList();
+
+                        for(ProjectList projectList1:projectList)
+                        {
+                            Log.i("GETINDEX","GETIING  : "+projectList1.getProjectId()+" "+projectList1.getProject());
+
+                        }
+
+
 
                         // activity list to sharedpreferences
                         SharedPrefManager.getInstance(getApplicationContext()).pushprojectList(projectList);

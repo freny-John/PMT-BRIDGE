@@ -169,6 +169,13 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                     if (position <= 8 && position >= 2) {
                         currenthourDetails.addAll(weekReport.get(position - 2).getHourDetails());
                     }
+
+                    for(WeekReport weekR:weekReport)
+                    {  for(HourDetail wee :weekR.getHourDetails())
+                    {
+                        Log.i("GETINDEX","project lists "+wee.getProjId());
+
+                    }}
                     adapter.notifyDataSetChanged();
                     Log.i("ADAPTERADD ", "12323");
 
@@ -305,7 +312,11 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
                             Log.e("SERVER_RESPONSE_data", "pROJECT LIST " + String.valueOf((response.body().getData().getProjectList())));
 
                             List<ProjectList> projectList = response.body().getData().getProjectList();
+                            for(ProjectList projectList1:projectList)
+                            {
+                                Log.i("GETINDEX","GETIING  : "+projectList1.getProjectId()+" "+projectList1.getProject());
 
+                            }
                             // activity list to sharedpreferences
                             SharedPrefManager.getInstance(getActivity()).pushprojectList(projectList);
 
@@ -580,8 +591,12 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
     }
 
     private int getIndexofActivity(String activity, List<Activity> activityList) {
+        Log.i("GETINDEX","--looking for "+activity);
+
         for (int i = 0; i < activityList.size(); i++) {
             if (activity.equals(activityList.get(i).getCode())) {
+                Log.i("GETINDEX","--In : "+activityList.get(i).getCode());
+
                 return i;
             }
         }
@@ -589,8 +604,12 @@ public class HoursFragment extends Fragment implements RecyclerItemTouchHelper.R
     }
 
     public int getIndexofProject(Integer projId, List<ProjectList> projectList) {
+        Log.i("GETINDEX","looking for "+projId);
         for (int i = 0; i < projectList.size(); i++) {
-            if (projId.equals(projectList.get(i).getId())) {
+            Log.i("GETINDEX","In : "+projectList.get(i).getProjectId()+" "+projectList.get(i).getProject());
+
+            if (projId.equals(projectList.get(i).getProjectId())) {
+
                 return i;
             }
         }

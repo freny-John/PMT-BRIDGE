@@ -100,8 +100,16 @@ public class DecimalPicker extends RelativeLayout {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            public void onTextChanged(CharSequence arg0, int start, int before, int count) {
+                String text = arg0.toString();
+                if(parseDouble(text)>12)
+                {
+                    editText.setText("12");
+                }
+                if (text.contains(".") && text.substring(text.indexOf(".") + 1).length() > 2) {
+                    editText.setText(text.substring(0, text.length() - 1));
+                    editText.setSelection(editText.getText().length());
+                }
             }
 
             @Override
@@ -201,7 +209,10 @@ public class DecimalPicker extends RelativeLayout {
     }
 
     private double parseDouble(String str) throws NumberFormatException {
+        if(!str.isEmpty())
         return Double.parseDouble(str.replace(",","."));
+
+        else return 0;
     }
 
 

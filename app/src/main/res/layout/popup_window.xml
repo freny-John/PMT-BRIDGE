@@ -81,7 +81,6 @@
 
         <EditText
             android:id="@+id/descp"
-            android:maxLength="100"
             android:maxLines="5"
             android:gravity="start|top"
             android:minLines="5"
